@@ -1,1 +1,1 @@
-# xml-modules
+# xml-pages
