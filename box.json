@@ -1,0 +1,9 @@
+{
+  "files": [
+    "README.md",
+    "VERSION",
+    "LICENSE",
+    "src/xml-modules"
+  ],
+  "output": "xml-modules.phar"
+}
