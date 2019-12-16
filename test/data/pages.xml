@@ -1,0 +1,12 @@
+<?xml ?>
+<pages>
+    <pagedef id='home' default='1'>
+        <content id='content' src='main-content.html' />
+    </pagedef>
+    <pagedef id='about'>
+        <content id='content' src='about-content.html' />
+    </pagedef>
+    <pagedef id='contact'>
+        <content id='content' src='contact-content.html' />
+    </pagedef>
+</pages>
