@@ -2,8 +2,9 @@
   "files": [
     "README.md",
     "VERSION",
-    "LICENSE",
-    "src/xml-modules"
+    "LICENSE"
   ],
-  "output": "xml-modules.phar"
+  "directories" : [ "src" ],
+  "stub": "src/stub.php",
+  "output": "xml-pages.phar"
 }
