@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+
+<modules>
+    <module>
+        <dependencies>
+            <dependency group="bhoogter" name="php-dependency-manager" version="1.0.3" />
+            <dependency group="bhoogter" name="xml-file" version="0.2.61" />
+            <dependency group="bhoogter" name="xml-modules" version="0.2.61" />
+        </dependencies>
+    </module>
+</modules>
