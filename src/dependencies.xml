@@ -3,8 +3,8 @@
 <modules>
     <module>
         <dependencies>
-            <dependency group="bhoogter" name="xml-file" version="0.2.62" />
-            <dependency group="bhoogter" name="xml-modules" version="0.1.2" />
+            <dependency group="bhoogter" name="xml-file" version="0.2.69" />
+            <dependency group="bhoogter" name="xml-modules" version="0.1.3" />
         </dependencies>
     </module>
 </modules>
