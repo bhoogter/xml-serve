@@ -1,11 +1,14 @@
 <?php
 
 class xml_pages {
-    private source $src;
+    private $page_source;
 
     function __construct() {
-        $src = new source();
+        
+    }
 
+    function get_source() {
+        return "";
     }
 
 }
