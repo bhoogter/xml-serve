@@ -18,13 +18,42 @@ class xml_pages
         }
     }
 
-    function pages_source()             {        return $this->pages_source;    }
-    function template_folder()          {        return $this->resource_folder;    }
-    function source_part_get($index)    {        return $this->pages_source()->get($index);    }
-    function source_part_nde($index)    {        return $this->pages_source()->nde($index);    }
-    function source_part_def($index)    {        return $this->pages_source()->def($index);    }
+    function template_folder()
+    {
+        return $this->resource_folder;
+    }
+    function pages_source()
+    {
+        return $this->pages_source;
+    }
+    function source_part_get($index)
+    {
+        return $this->pages_source()->get($index);
+    }
+    function source_part_nde($index)
+    {
+        return $this->pages_source()->nde($index);
+    }
+    function source_part_def($index)
+    {
+        return $this->pages_source()->def($index);
+    }
 
-    function page_part($index, $pageset = "")
+    protected function new_pagepart_xml($element, $pageset)
+    {
+        $xml = xml_file::nodeXmlFile($element);
+        return $xml;
+    }
+
+    function page_part($index)
+    {
+        $pageset = "";
+        $element = $this->page_part_element($index, $pageset);
+        if ($element == null) return null;
+        return $this->new_pagepart_xml($element, $pageset);
+    }
+
+    function page_part_element($index, &$pageset = "")
     {
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
         // print "\n<br/>xml-pages::page_part($index, $pageset)";
@@ -56,7 +85,10 @@ class xml_pages
             $pageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
             if ($pageset != null) {
                 // print "\n<br/>xml-pages::page_part - subpath pageset $pageset";
-                return $this->page_part($rest, $pageset);
+                $subset_result = $this->page_part($rest, $pageset);
+                if ($subset_result != null) return $subset_result;
+                // print "\n<br/>xml-pages::page_part - subpath didn't find.  No 404 handler provided.";
+                break;
             }
         }
 

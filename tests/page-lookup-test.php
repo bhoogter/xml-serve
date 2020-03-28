@@ -16,7 +16,7 @@ class page_lookup extends TestCase
 
 	public function lookupPageId($path)
 	{
-		return self::$subject->page_part($path)->getAttribute("loc");
+		return self::$subject->page_part($path)->get("/pagedef/@loc");
 	}
 
 	public function testDefaultLookup(): void
