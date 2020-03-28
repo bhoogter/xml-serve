@@ -10,7 +10,7 @@ class xml_pages
         $n = func_num_args();
         $a = func_get_args();
         if ($n >= 1) {
-            if (is_object($n)) $this->pages_source = $a[0];
+            if (is_object($a[0])) $this->pages_source = $a[0];
             else $this->pages_source = new xml_file($a[0]);
         }
         if ($n >= 2) {
@@ -18,30 +18,11 @@ class xml_pages
         }
     }
 
-    function pages_source()
-    {
-        return $this->pages_source;
-    }
-
-    function template_folder()
-    {
-        return $this->resource_folder;
-    }
-
-    function source_part_get($index)
-    {
-        return $this->pages_source()->get($index);
-    }
-
-    function source_part_nde($index)
-    {
-        return $this->pages_source()->nde($index);
-    }
-
-    function source_part_def($index)
-    {
-        return $this->pages_source()->def($index);
-    }
+    function pages_source()             {        return $this->pages_source;    }
+    function template_folder()          {        return $this->resource_folder;    }
+    function source_part_get($index)    {        return $this->pages_source()->get($index);    }
+    function source_part_nde($index)    {        return $this->pages_source()->nde($index);    }
+    function source_part_def($index)    {        return $this->pages_source()->def($index);    }
 
     function page_part($index, $pageset = "")
     {

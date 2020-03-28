@@ -57,6 +57,7 @@ class page_lookup extends TestCase
 		$this->assertEquals("extra", $this->lookupPageId("sub2/extra"));
 		$this->assertEquals("sub2home", $this->lookupPageId("sub2/sub2"));
 		$this->assertEquals("extra", $this->lookupPageId("sub2/sub2/extra"));
+		$this->assertEquals("404", $this->lookupPageId("sub2/fake"));
 
 		$this->assertEquals("sub2/extra2", $this->lookupPageId("sub2/extra2"));
 	}

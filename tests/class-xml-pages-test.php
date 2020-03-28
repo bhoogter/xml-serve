@@ -17,5 +17,9 @@ class pages_test extends TestCase
 		$this->assertNotNull($obj);
 	}
 
-	
+	public function testCreatePagesClassWithXmlFileObject(): void {
+		$xmlobj = new xml_file(self::PAGES_XML);
+		$obj = new xml_pages($xmlobj);
+		$this->assertNotNull($obj);
+	}
 }
