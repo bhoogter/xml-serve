@@ -1,0 +1,14 @@
+<?xml version='1.0' ?>
+<pages template='template.html'>
+    <page loc='home' default='1'>
+        <content id='content' src='main-content.html' />
+    </page>
+    <page loc='about'>
+        <content id='content' src='about-content.html' />
+    </page>
+    <page loc='contact'>
+        <content id='content' src='contact-content.html' />
+    </page>
+    <page loc='sub' pageset='pages-subset.xml' />
+    <page loc='sub2' pageset='pages-subset.xml' />
+</pages>

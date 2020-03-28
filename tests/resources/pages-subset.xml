@@ -1,0 +1,12 @@
+<?xml ?>
+<pages template='template-subset.html'>
+    <page id='index' default='1'>
+        <content id='content' src='main-content.html' />
+    </page>
+    <page id='series'>
+        <content id='content' src='subset-about-content.html' />
+    </page>
+    <page id='abstract'>
+        <content id='content' src='subset-abstract.html' />
+    </page>
+</pages>

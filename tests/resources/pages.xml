@@ -1,12 +1,62 @@
-<?xml ?>
-<pages>
-    <pagedef id='home' default='1'>
-        <content id='content' src='main-content.html' />
-    </pagedef>
-    <pagedef id='about'>
-        <content id='content' src='about-content.html' />
-    </pagedef>
-    <pagedef id='contact'>
-        <content id='content' src='contact-content.html' />
-    </pagedef>
+<?xml version='1.0' ?>
+<pages template='template-main'>
+    <pageset>
+        <pagedef loc='home' default='1'>
+            <content id='content' src='main-content.html' />
+        </pagedef>
+        <pagedef loc='about'>
+            <content id='content' src='about-content.html' />
+        </pagedef>
+        <pagedef loc='contact'>
+            <content id='content' src='contact-content.html' />
+        </pagedef>
+        <pagedef loc='sub' pageset='subset1' />
+        <pagedef loc='sub/sub' pageset='subset1' />
+        <pagedef loc='sub/sub/sub' pageset='subset1' />
+        <pagedef loc='sub1b' pageset='subset1' />
+        <pagedef loc='sub1c' pageset='subset1' />
+
+        <pagedef loc='some/long/path/somewhere/sub2' pageset='subset2' />
+
+        <pagedef loc='sub2' pageset='subset2' />
+        <pagedef loc='sub2/extra2'>
+            <content id='content' src='contact-content.html' />
+        </pagedef>
+    </pageset>
+
+    <pageset id='subset1' template='template1'>
+        <pagedef loc='home' default='1'>
+            <content id='content' src='main-content.html' />
+        </pagedef>
+        <pagedef loc='info'>
+            <content id='content' src='about-content.html' />
+        </pagedef>
+        <pagedef loc='content'>
+            <content id='content' src='contact-content.html' />
+        </pagedef>
+    </pageset>
+
+    <pageset id='subset2' template='template2'>
+        <pagedef loc='home' default='1'>
+            <content id='content' src='home.html' />
+        </pagedef>
+        <pagedef loc='extra'>
+            <content id='content' src='extra.html' />
+        </pagedef>
+        <pagedef loc='again'>
+            <content id='content' src='again.html' />
+        </pagedef>
+    </pageset>
+
+    <pageset id='subset2' template='template2'>
+        <pagedef loc='home' default='1'>
+            <content id='content' src='home.html' />
+        </pagedef>
+        <pagedef loc='extra'>
+            <content id='content' src='extra.html' />
+        </pagedef>
+        <pagedef loc='again'>
+            <content id='content' src='again.html' />
+        </pagedef>
+    </pageset>
 </pages>
