@@ -27,16 +27,18 @@ class page_lookup extends TestCase
 		$this->assertEquals("about", $this->lookupPageId("/about"));
 		$this->assertEquals("about", $this->lookupPageId("/about/"));
 		$this->assertEquals("contact", $this->lookupPageId("contact"));
+		$this->assertEquals("404", $this->lookupPageId("fake"));
 	}
 
 	public function testSubdef1Loads(): void
 	{
 		$this->assertEquals("sub1home", $this->lookupPageId("sub"));
-		$this->assertEquals("sub1home", $this->lookupPageId("sub/home"));
-		$this->assertEquals("sub1home", $this->lookupPageId("sub/home/"));
+		$this->assertEquals("sub1home", $this->lookupPageId("sub/sub1home"));
+		$this->assertEquals("sub1home", $this->lookupPageId("sub/sub1home/"));
 		$this->assertEquals("info", $this->lookupPageId("sub/info"));
 		$this->assertEquals("info", $this->lookupPageId("sub/info/"));
 		$this->assertEquals("content", $this->lookupPageId("sub/content"));
+		$this->assertEquals("4041", $this->lookupPageId("sub/fake"));
 	}
 
 	public function testSubdef1DuplicatesLoads(): void
@@ -67,16 +69,19 @@ class page_lookup extends TestCase
 
 	public function testSubdef1cContent(): void
 	{
-		$this->assertEquals("home", $this->lookupPageId("/sub1/content"));
+		$this->assertEquals("content", $this->lookupPageId("/sub/content"));
 		$this->assertEquals("content", $this->lookupPageId("/sub1b/content"));
 		$this->assertEquals("content", $this->lookupPageId("/sub1c/content"));
 	}
 
 	public function testSub1Lev1Home(): void
 	{
-		$this->assertEquals("sub1home", $this->lookupPageId("/sub/home"));
-		$this->assertEquals("sub1home", $this->lookupPageId("/sub/sub/home"));
-		$this->assertEquals("sub1home", $this->lookupPageId("/sub/sub/sub/home"));
+		$this->assertEquals("sub1home", $this->lookupPageId("/sub"));
+		$this->assertEquals("sub1home", $this->lookupPageId("/sub/sub1home"));
+		$this->assertEquals("sub1home", $this->lookupPageId("/sub/sub/"));
+		$this->assertEquals("sub1home", $this->lookupPageId("/sub/sub/sub1home"));
+		$this->assertEquals("sub1home", $this->lookupPageId("/sub/sub/sub"));
+		$this->assertEquals("sub1home", $this->lookupPageId("/sub/sub/sub/sub1home"));
 	}
 
 	public function testSub2OnLongPathExtra(): void

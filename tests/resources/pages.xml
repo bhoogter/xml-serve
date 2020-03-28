@@ -4,6 +4,9 @@
         <pagedef loc='home' default='1'>
             <content id='content' src='main-content.html' />
         </pagedef>
+        <pagedef loc='404' default404='1'>
+            <content id='content' src='404-content.html' />
+        </pagedef>
         <pagedef loc='about'>
             <content id='content' src='about-content.html' />
         </pagedef>
@@ -29,6 +32,9 @@
 
     <pageset id='subset1' template='template1'>
         <pagedef loc='sub1home' default='1'>
+            <content id='content' src='main-content.html' />
+        </pagedef>
+        <pagedef loc='4041' default404='1'>
             <content id='content' src='main-content.html' />
         </pagedef>
         <pagedef loc='info'>
