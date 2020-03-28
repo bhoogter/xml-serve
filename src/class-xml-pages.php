@@ -41,14 +41,23 @@ class xml_pages
 
     protected function new_pagepart_xml($element, $pageset)
     {
+        $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
+//        print xml_file::nodeXml($element);
         $xml = xml_file::nodeXmlFile($element);
+        $xml->set("/pagedef/@pageset", $pageset);
+        if (($template = $this->source_part_get("/pages/pageset[$pageset_check]/@template")) != '')
+            $xml->set("/pagedef/@template", $template);
+        else if (($template = $this->source_part_get("/pages/pageset[@default]/@template")) != '')
+            $xml->set("/pagedef/@template", $template);
+        print $xml->saveXML();
         return $xml;
     }
-
+    
     function page_part($index)
     {
         $pageset = "";
         $element = $this->page_part_element($index, $pageset);
+        print ("\n<br/>xml-pages::page_part - pageset=$pageset");
         if ($element == null) return null;
         return $this->new_pagepart_xml($element, $pageset);
     }
@@ -61,10 +70,13 @@ class xml_pages
         if (substr($index, -1) == '/') $index = substr($index, 0, strlen($index) - 1);
         //print "\n<br/>xml-pages::page_part($index, $pageset)";
         if (($this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@loc='$index']"))  != null) {
-            $pageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@pageset");
+            $subpageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@pageset");
             // print "\n<br/>xml-pages::page_part - exact match $index (pageset=$pageset)";
 
-            if ($pageset != null) return $this->page_part("", $pageset);
+            if ($subpageset != null) {
+                $pageset = $subpageset;
+                return $this->page_part_element("", $subpageset);
+            }
             return $this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@loc='$index']");
         }
         $path = $index;
@@ -82,10 +94,11 @@ class xml_pages
             // print "\n<br/>xml-pages::page_part - Searching path tree: path=$path, rest=$rest";
             // print "\n<br/>xml-pages::page_part - Searching: /pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset";
 
-            $pageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
-            if ($pageset != null) {
+            $subpageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
+            if ($subpageset != null) {
                 // print "\n<br/>xml-pages::page_part - subpath pageset $pageset";
-                $subset_result = $this->page_part($rest, $pageset);
+                $pageset = $subpageset;
+                $subset_result = $this->page_part_element($rest, $pageset);
                 if ($subset_result != null) return $subset_result;
                 // print "\n<br/>xml-pages::page_part - subpath didn't find.  No 404 handler provided.";
                 break;

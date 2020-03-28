@@ -1,6 +1,6 @@
 <?xml version='1.0' ?>
 <pages template='template-main'>
-    <pageset>
+    <pageset template='main'>
         <pagedef loc='home' default='1'>
             <content id='content' src='main-content.html' />
         </pagedef>
