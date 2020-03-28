@@ -46,13 +46,13 @@ class xml_pages
     function page_part($index, $pageset = "")
     {
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
-print "\n<br/>xml-pages::page_part($index, $pageset)";
+// print "\n<br/>xml-pages::page_part($index, $pageset)";
         if (substr($index, 0, 1) == '/') $index = substr($index, 1);
         if (substr($index, -1) == '/') $index = substr($index, 0, strlen($index) - 1);
 //print "\n<br/>xml-pages::page_part($index, $pageset)";
         if (($this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@loc='$index']"))  != null) {
             $pageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@pageset");
-print "\n<br/>xml-pages::page_part - exact match $index (pageset=$pageset)";
+// print "\n<br/>xml-pages::page_part - exact match $index (pageset=$pageset)";
 
             if ($pageset != null) return $this->page_part("", $pageset);
             return $this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@loc='$index']");
@@ -66,27 +66,28 @@ print "\n<br/>xml-pages::page_part - exact match $index (pageset=$pageset)";
                 $rest = "$path/$rest";
                 $path = '';
             } else {
-                $rest = substr($path, $x + 1) . "/$rest";
+                $rest = substr($path, $x + 1) . ($rest == "" ? "" : "/") . $rest;
+                $path = substr($path, 0, $x);
             }
+// print "\n<br/>xml-pages::page_part - Searching path tree: path=$path, rest=$rest";
+// print "\n<br/>xml-pages::page_part - Searching: /pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset";
 
-            $pageset = $this->source_part_get("/pages/pageset$pageset_check]/pagedef[@loc='$path']/@pageset");
+            $pageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
             if ($pageset != null) {
-print "\n<br/>xml-pages::page_part - subpath pageset $pageset";
+// print "\n<br/>xml-pages::page_part - subpath pageset $pageset";
                 return $this->page_part($rest, $pageset);
             }
         }
 
 // print "\n<br/>xml-pages::page_part - Checking default on /pages/pageset[$pageset_check]/pagedef[@default]/@id";
         if ($this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@default]/@loc") != '') {
-print "\n<br/>xml-pages::page_part - default match";
+// print "\n<br/>xml-pages::page_part - default match";
             return $this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@default]");
         }
 
-print "\n<br/>xml-pages::page_part - NO MATCH";
+// print "\n<br/>xml-pages::page_part - NO MATCH";
         return null;
     }
-
-
 
     function get_page($index)
     {

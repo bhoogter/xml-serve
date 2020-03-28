@@ -14,17 +14,82 @@ class page_lookup extends TestCase
 		self::$subject = new xml_pages(self::PAGES_XML, __DIR__ . "/resources");
 	}
 
-	public function testPageExactMatch(): void
+	public function lookupPageId($path)
 	{
-		$result = self::$subject->page_part("/about");
-		$this->assertNotNull($result);
-		$this->assertEquals("about", $result->getAttribute("loc"));
+		return self::$subject->page_part($path)->getAttribute("loc");
 	}
 
 	public function testDefaultLookup(): void
 	{
-		$result = self::$subject->page_part("/");
-		$this->assertNotNull($result);
-		$this->assertEquals("home", $result->getAttribute("loc"));
+		$this->assertEquals("home", $this->lookupPageId("/"));
+		$this->assertEquals("home", $this->lookupPageId(""));
+		$this->assertEquals("about", $this->lookupPageId("about"));
+		$this->assertEquals("about", $this->lookupPageId("/about"));
+		$this->assertEquals("about", $this->lookupPageId("/about/"));
+		$this->assertEquals("contact", $this->lookupPageId("contact"));
+	}
+
+	public function testSubdef1Loads(): void
+	{
+		$this->assertEquals("sub1home", $this->lookupPageId("sub"));
+		$this->assertEquals("sub1home", $this->lookupPageId("sub/home"));
+		$this->assertEquals("sub1home", $this->lookupPageId("sub/home/"));
+		$this->assertEquals("info", $this->lookupPageId("sub/info"));
+		$this->assertEquals("info", $this->lookupPageId("sub/info/"));
+		$this->assertEquals("content", $this->lookupPageId("sub/content"));
+	}
+
+	public function testSubdef1DuplicatesLoads(): void
+	{
+		$this->assertEquals("sub1home", $this->lookupPageId("sub"));
+		$this->assertEquals("info", $this->lookupPageId("sub/info"));
+		$this->assertEquals("sub1home", $this->lookupPageId("sub/sub"));
+		$this->assertEquals("info", $this->lookupPageId("sub/sub/info"));
+		$this->assertEquals("sub1home", $this->lookupPageId("sub/sub/sub"));
+		$this->assertEquals("info", $this->lookupPageId("sub/sub/sub/info"));
+	}
+
+	public function testSubdef2Loads(): void
+	{
+		$this->assertEquals("sub2home", $this->lookupPageId("sub2/"));
+		$this->assertEquals("extra", $this->lookupPageId("sub2/extra"));
+		$this->assertEquals("sub2home", $this->lookupPageId("sub2/sub2"));
+		$this->assertEquals("extra", $this->lookupPageId("sub2/sub2/extra"));
+
+		$this->assertEquals("sub2/extra2", $this->lookupPageId("sub2/extra2"));
+	}
+
+	public function testSubdefDeepLookupExists(): void
+	{
+		$this->assertEquals("further/and/further/yet", $this->lookupPageId("/sub3/sub3/sub3/further/and/further/yet"));
+		$this->assertEquals("sub3home", $this->lookupPageId("sub3/sub3/sub3/"));
+	}
+
+	public function testSubdef1cContent(): void
+	{
+		$this->assertEquals("home", $this->lookupPageId("/sub1/content"));
+		$this->assertEquals("content", $this->lookupPageId("/sub1b/content"));
+		$this->assertEquals("content", $this->lookupPageId("/sub1c/content"));
+	}
+
+	public function testSub1Lev1Home(): void
+	{
+		$this->assertEquals("sub1home", $this->lookupPageId("/sub/home"));
+		$this->assertEquals("sub1home", $this->lookupPageId("/sub/sub/home"));
+		$this->assertEquals("sub1home", $this->lookupPageId("/sub/sub/sub/home"));
+	}
+
+	public function testSub2OnLongPathExtra(): void
+	{
+		$this->assertEquals("extra", $this->lookupPageId("some/long/path/somewhere/sub2/extra"));
+	}
+
+	public function testSub2Default(): void
+	{
+		$this->assertEquals("sub2home", $this->lookupPageId("sub2"));
+		$this->assertEquals("again", $this->lookupPageId("sub2/again"));
+		$this->assertEquals("sub2home", $this->lookupPageId("sub2/sub2"));
+		$this->assertEquals("again", $this->lookupPageId("sub2/sub2/again"));
+		$this->assertEquals("sub2/extra2", $this->lookupPageId("sub2/extra2"));
 	}
 }
