@@ -22,5 +22,6 @@ class resource_resolver_tests extends TestCase
 		$this->assertTrue($this->fileFound("main-content.html"));
 		$this->assertTrue($this->fileFound("contact-content.html"));
 		$this->assertTrue($this->fileFound("about-content.html"));
+		$this->assertFalse($this->fileFound("does-not-exist.html"));
 	}
 }
