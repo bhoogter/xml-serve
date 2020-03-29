@@ -18,31 +18,16 @@ class xml_pages
         }
     }
 
-    function template_folder()
-    {
-        return $this->resource_folder;
-    }
-    function pages_source()
-    {
-        return $this->pages_source;
-    }
-    function source_part_get($index)
-    {
-        return $this->pages_source()->get($index);
-    }
-    function source_part_nde($index)
-    {
-        return $this->pages_source()->nde($index);
-    }
-    function source_part_def($index)
-    {
-        return $this->pages_source()->def($index);
-    }
+    function template_folder()          {        return $this->resource_folder;    }
+    function pages_source()             {        return $this->pages_source;    }
+    function source_part_get($index)    {        return $this->pages_source()->get($index);    }
+    function source_part_nde($index)    {        return $this->pages_source()->nde($index);    }
+    function source_part_def($index)    {        return $this->pages_source()->def($index);    }
 
     protected function new_pagepart_xml($element, $pageset)
     {
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
-//        print xml_file::nodeXml($element);
+        // print xml_file::nodeXml($element);
         $xml = xml_file::nodeXmlFile($element);
         $xml->set("/pagedef/@pageset", $pageset);
         if (($template = $this->source_part_get("/pages/pageset[$pageset_check]/@template")) != '')
@@ -52,12 +37,12 @@ class xml_pages
         print $xml->saveXML();
         return $xml;
     }
-    
+
     function page_part($index)
     {
         $pageset = "";
         $element = $this->page_part_element($index, $pageset);
-        print ("\n<br/>xml-pages::page_part - pageset=$pageset");
+        // print ("\n<br/>xml-pages::page_part - pageset=$pageset");
         if ($element == null) return null;
         return $this->new_pagepart_xml($element, $pageset);
     }
