@@ -10,20 +10,15 @@ class resource_resolver
     //     return $value;
     // }
 
+    public static $http_root;
     protected static $resource_root;
     protected static $locations;
 
-    public static function locations($resource_root = "")
-    {
-        if (!is_array(self::$locations)) self::init($resource_root);
-        if ($resource_root != '') self::$resource_root = $resource_root;
-        return self::$locations;
-    }
-
     public function init($resource_root = "")
     {
+        if (self::$http_root == "") self::$http_root = realpath(dirname(__DIR__));
         self::$locations = [];
-        
+
         if ($resource_root == "") self::$resource_root = __DIR__ . "/content";
         else self::$resource_root = $resource_root;
 
@@ -36,18 +31,19 @@ class resource_resolver
 
     private static function add_location($name, $loc = "")
     {
+        if (!is_array(self::$locations)) self::$locations = self::init();
         if ($loc == "") $loc = $name;
-        self::locations()[$name] = $loc;
+        self::$locations[$name] = $loc;
     }
 
     private static function remove_location($name)
     {
-        unset(self::locations()[$name]);
+        unset(self::$locations[$name]);
     }
 
     public static function resolve_files($resource, $types = [], $mappings = [], $subfolders = ['.', '*'])
     {
-        // print "\n<br/>resource_resolver::resolve_files($resource, ..., ..., ...)"; print_r($types);
+        //  print "\n<br/>resource_resolver::resolve_files($resource, ..., ..., ...)"; print_r($types); print_r($mappings);
         if (is_string($types) && is_string($mappings)) {
             $mappings = [$types => $mappings];
             $types = [$types];
@@ -60,9 +56,12 @@ class resource_resolver
         // print "<br/>===   Types="; print_r($types);
         $res = [];
         foreach ($types as $type) {
+            // print "\n<br/>resource_resolver::resolve_files - type=$type";
             // print "\n<br/>resource_resolver::resolve_files - type=$type, res="; print_r($res);
-            $type_loc = !!isset(self::locations()[$type]) ? self::locations()[$type] : $type;
-            $type_loc = str_replace($type_loc, "@@", @$mappings[$type] || '');
+            $type_loc = !!isset(self::$locations[$type]) ? self::$locations[$type] : $type;
+            // print "\n<br/>typeloc=$type_loc";
+            $type_loc = str_replace("@@", isset($mappings[$type]) ? $mappings[$type] : '', $type_loc);
+            // print "\n<br/>typeloc=$type_loc";
             // TODO: Other Mappings...
             $loc = self::$resource_root . "/" . $type_loc;
             // print "\n<br/>resource_resolver::resolve - loc: $loc";
@@ -73,6 +72,10 @@ class resource_resolver
                 // print "\n<br/>resource_resolver::resolve - matching pattern: $pattern";
                 $res += glob($pattern);
             }
+        }
+
+        for ($i = 0; $i < count($res); $i++) {
+            $res[$i] = realpath(str_replace("\\", "/", $res[$i]));
         }
         $num = count($res);
         // print "\n<br/>resource_resolver::resolve - matched $num items...";
@@ -88,7 +91,8 @@ class resource_resolver
     public static function resolve_ref($resource, $types = [], $mappings = [], $subfolders = ['.', '*'])
     {
         $filename = self::resolve_file($resource, $types, $mappings, $subfolders);
-        $result = str_replace($filename, dirname(__DIR__), "");
+        $result = str_replace(self::$http_root, "", $filename);
+        $result = str_replace("\\", "/", $result);
         return $result;
     }
 }
