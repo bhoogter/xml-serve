@@ -108,18 +108,25 @@ class xml_pages
         return null;
     }
 
-    function get_page($index)
-    {
-        // Exact matches
-        if (($id = $this->pages_source()->nde("/pages/page[@loc='$index']/@id")) != null) return $id;
-        if (($id = $this->pages_source()->nde("/pages/page[@default='1']/@id")) != null) return $id;
-
-        return null;
+    function parse_special($pagedef) {
+        // 301 Moved Permanently
+        // 302 Found
+        // 303 See Other
+        // 307 Temporary Redirect
+        
+        if (($url = $pagedef->get("/@redirect")) != '') {
+            $type = $pagedef->get("/@redirect-type");
+            if ($type == '') $type = 301;
+            die(header("Location: $url",TRUE,307));
+        }
     }
 
-    function get_source()
+    function get_page($index)
     {
-        $id = $this->get_page_id();
-        return "";
+        $pagedef = $this->page_part($index);
+        $this->parse_special($pagedef);
+        $page = page_render::make_page($pagedef);
+        $result = xml_file::make_tidy_string($page->saveXML());
+        return $result;
     }
 }

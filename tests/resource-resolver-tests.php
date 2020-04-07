@@ -8,8 +8,10 @@ class resource_resolver_tests extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
-		resource_resolver::init(__DIR__ . "/resources/content");
-		resource_resolver::$http_root = realpath(__DIR__ . "/resources");
+		resource_resolver::init(
+			__DIR__ . "/resources/content",
+			realpath(__DIR__ . "/resources")
+		);
 	}
 
 	private function file($spec, $types = [], $mappings = [])

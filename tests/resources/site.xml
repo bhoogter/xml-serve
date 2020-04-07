@@ -1,0 +1,8 @@
+<?xml version='1.0' ?>
+<site>
+	<global>
+		<title append='1'>Some Site</title>
+		<description>This describes the site.</description>
+		<keywords>These are for searching and SEO.</keywords>
+	</global>
+</site>

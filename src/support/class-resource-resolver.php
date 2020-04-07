@@ -14,8 +14,9 @@ class resource_resolver
     protected static $resource_root;
     protected static $locations;
 
-    public function init($resource_root = "")
+    public static function init($resource_root = "", $http_root = "")
     {
+        if ($http_root != "") self::$http_root = $http_root;
         if (self::$http_root == "") self::$http_root = realpath(dirname(__DIR__));
         self::$locations = [];
 
@@ -31,7 +32,7 @@ class resource_resolver
 
     private static function add_location($name, $loc = "")
     {
-        if (!is_array(self::$locations)) self::$locations = self::init();
+        if (!is_array(self::$locations)) self::init();
         if ($loc == "") $loc = $name;
         self::$locations[$name] = $loc;
     }
@@ -90,9 +91,42 @@ class resource_resolver
 
     public static function resolve_ref($resource, $types = [], $mappings = [], $subfolders = ['.', '*'])
     {
+        // print "\n<br/>resource_resolver::resolve_ref($resource, ...);";
         $filename = self::resolve_file($resource, $types, $mappings, $subfolders);
         $result = str_replace(self::$http_root, "", $filename);
         $result = str_replace("\\", "/", $result);
         return $result;
     }
+
+    public static function script_type($filename)
+    {
+		$x = strrpos($fn, ".");
+        if ($x===false) return "text/javascript";
+        switch (strtolower(substr($filename, $x + 1, 1))) {
+            case 'j': return 'text/javascript';
+            case 'v': return 'text/vbscript';
+            default: return 'text/javascript';
+
+        }
+
+        $filename = self::resolve_file($resource, $types, $mappings, $subfolders);
+        $result = str_replace(self::$http_root, "", $filename);
+        $result = str_replace("\\", "/", $result);
+        return $result;
+    }
+
+    function image_format($fn)
+		{
+		$x = strrpos($fn, ".");
+		if ($x===false) return "image/ico";
+		$t = substr($fn, $x);
+		switch(strtolower(substr($t, 0, 4)))
+			{
+			case ".ico": return "image/ico";
+			case ".png": return "image/png";
+			case ".jpg": case ".jpe": return "image/jpeg";
+			case ".gif": return "image/gif";
+			default: return "image/bmp";
+			}
+		}
 }

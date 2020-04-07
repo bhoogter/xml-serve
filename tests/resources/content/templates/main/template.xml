@@ -9,7 +9,7 @@
 	<tags>green, three-column</tags>
 	<preview>green-screen.jpg</preview>
 
-	<css src='colour.css'/>
+	<css src='color.css'/>
 	<css src='style.css'/>
 	<images src='images/'/>
 

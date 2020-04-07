@@ -6,5 +6,5 @@
   ],
   "directories" : [ "src" ],
   "stub": "src/stub.php",
-  "output": "xml-pages.phar"
+  "output": "xml-serve.phar"
 }
