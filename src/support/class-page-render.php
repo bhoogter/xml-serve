@@ -2,17 +2,19 @@
 
 class page_render {
     public const DEBUG_MAKE_PAGE = "";
-    private static $pagedef;
-    private static $template;
-    private static $settings;
+
+    public static $pagedef;
+    public static $template;
+    public static $settings;
     public static $settings_file;
 
     private static $handlers;
 
     protected static function init_handlers() {
         if (is_array(self::$handlers)) return;
+        self::include_support();
         self::$handlers = [];
-        self::add_handler("content", "page_render::render_content");
+        self::add_handler("content", "make_page_render_content::render_content");
     }
 
     public static function generator_name() {
@@ -49,14 +51,9 @@ class page_render {
         return file_get_contents($filename);
     }
 
-    // public static function include_support() {
-    //     $d = (strpos(__FILE__, ".phar") === false ? __DIR__ : "phar://" . __FILE__ . "/src");
-    //     require_once($d . "/support/first.php");
-    // }
-
-    public static function render_content($El) {
-        
-        return "";
+    public static function include_support() {
+        $d = (strpos(__FILE__, ".phar") === false ? __DIR__ : "phar://" . __FILE__ . "/src");
+        require_once($d . "/renderers/make_page_render_content.php");
     }
 
     public static function get($path) { return self::$pagedef->get($path); }
@@ -66,13 +63,12 @@ class page_render {
     }
 
     public static function template_name() {
-        return self::$template->Doc;
+        return self::$pagedef->get("/pagedef/@template");
     }
 
     public static function site_settings_file() {
-        if (self::$settings_file == null || self::$settings_file == "") {
+        if (self::$settings_file == null || self::$settings_file == "") 
             self::$settings_file = __DIR__ . "/resources/site.xml";
-        }
         return self::$settings_file;
     }
 

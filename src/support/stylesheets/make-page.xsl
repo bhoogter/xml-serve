@@ -284,7 +284,7 @@
                 <xsl:for-each select='$NodeResult'>
                     <xsl:copy>
                         <xsl:for-each select='@*'><xsl:copy-of select='.' /></xsl:for-each>
-                        <xsl:for-each select='node()'>
+                        <xsl:for-each select='*'>
                             <xsl:call-template name='bodytemplate' />
                         </xsl:for-each>
                     </xsl:copy>
