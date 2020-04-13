@@ -83,19 +83,6 @@ class page_render {
         return self::$settings->Doc;
     }
 
-    public static function make_page($pagedef) {
-        // print "\n<br/>page_render::make_page()";
-        self::$pagedef = $pagedef;
-        $template_name = self::get("/pagedef/@template");
-        // print "\n<br/>page_render::make_page - template_name=$template_name";
-        $template_file = self::resource_resolver()->resolve_file("template.xml", "template", $template_name);
-        // print "\n<br/>page_render::make_page - template_file=$template_file";
-        if ($template_file == null) return null;
-        self::$template = new xml_file($template_file);
-        $result = new xml_file(xml_file::transformXMLXSL_static($pagedef->saveXML(), self::make_page_xsl(), true));
-        return $result;
-    }
-
     public static function resolve_files($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) {
         return self::resource_resolver()->resolve_files($resource, $types, $mappings, $subfolders);
     }
@@ -114,5 +101,18 @@ class page_render {
 
     public static function image_format($fn) {
         return self::resource_resolver()->image_format($fn);
+    }
+
+    public static function make_page($pagedef) {
+        // print "\n<br/>page_render::make_page()";
+        self::$pagedef = $pagedef;
+        $template_name = self::get("/pagedef/@template");
+        // print "\n<br/>page_render::make_page - template_name=$template_name";
+        $template_file = self::resource_resolver()->resolve_file("template.xml", "template", $template_name);
+        // print "\n<br/>page_render::make_page - template_file=$template_file";
+        if ($template_file == null) return null;
+        self::$template = new xml_file($template_file);
+        $result = new xml_file(xml_file::transformXMLXSL_static($pagedef->saveXML(), self::make_page_xsl(), true));
+        return $result;
     }
 }
