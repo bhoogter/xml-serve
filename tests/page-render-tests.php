@@ -8,13 +8,12 @@ class page_render_tests extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
-        resource_resolver::init(
+        resource_resolver::instance()->init(
             __DIR__ . "/resources/content",
             realpath(__DIR__ . "/resources")
         );
         page_render::$settings_file = __DIR__ . "/resources/site.xml";
     }
-
 
     public function candidatePage1()
     {

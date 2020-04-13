@@ -8,7 +8,7 @@ class resource_resolver_tests extends TestCase
 {
 	public static function setUpBeforeClass(): void
 	{
-		resource_resolver::init(
+		resource_resolver::instance()->init(
 			__DIR__ . "/resources/content",
 			realpath(__DIR__ . "/resources")
 		);
@@ -16,17 +16,17 @@ class resource_resolver_tests extends TestCase
 
 	private function file($spec, $types = [], $mappings = [])
 	{
-		return resource_resolver::resolve_file($spec, $types, $mappings);
+		return resource_resolver::instance()->resolve_file($spec, $types, $mappings);
 	}
 
 	private function files($spec, $types = [], $mappings = [])
 	{
-		return resource_resolver::resolve_files($spec, $types, $mappings);
+		return resource_resolver::instance()->resolve_files($spec, $types, $mappings);
 	}
 
 	private function ref($spec, $types = [], $mappings = [])
 	{
-		return resource_resolver::resolve_ref($spec, $types, $mappings);
+		return resource_resolver::instance()->resolve_ref($spec, $types, $mappings);
 	}
 
 	public function fileFound($spec, $types = [], $mappings = [], $containing = "")

@@ -72,12 +72,12 @@
 			<xsl:variable name='systemStyles' select="php:function('juniper_get_styles')" />
 			<xsl:for-each select="$systemStyles/*/link"><xsl:copy-of select='.'/></xsl:for-each>
 -->
-                <xsl:for-each select='$siteSettings/*/global/css'>
+                <xsl:for-each select='$siteSettings/*/global/css | //*/css'>
                     <link>
                         <xsl:attribute name='rel'>stylesheet</xsl:attribute>
                         <xsl:attribute name='type'>text/css</xsl:attribute>
                         <xsl:attribute name='href'>
-                            <xsl:value-of select='php:functionString("resource_resolver::resolve_ref", string(@src),"c", 1)' />
+                            <xsl:value-of select='php:functionString("page_render::resolve_ref", string(@src))' />
                         </xsl:attribute>
                     </link>
                 </xsl:for-each>
@@ -86,35 +86,12 @@
                         <xsl:attribute name='rel'>stylesheet</xsl:attribute>
                         <xsl:attribute name='type'>text/css</xsl:attribute>
                         <xsl:attribute name='href'>
-                            <xsl:value-of select='php:functionString("resource_resolver::resolve_ref", string(@src), "templates", string(@template))' />
-                        </xsl:attribute>
-                    </link>
-                </xsl:for-each>
-                <xsl:for-each select='//*/css'>
-                    <link>
-                        <xsl:attribute name='rel'>stylesheet</xsl:attribute>
-                        <xsl:attribute name='type'>text/css</xsl:attribute>
-                        <xsl:attribute name='href'>
-                            <xsl:value-of select='php:functionString("resource_resolver::resolve_ref", string(@src),"c", 1)' />
+                            <xsl:value-of select='php:functionString("page_render::resolve_ref", string(@src), "templates", string($SRC/pagedef/@template))' />
                         </xsl:attribute>
                     </link>
                 </xsl:for-each>
 
-                <xsl:for-each select='$siteSettings/*/global/rss'>
-                    <link>
-                        <xsl:attribute name='rel'>alternate</xsl:attribute>
-                        <xsl:attribute name='type'>application/rss+xml</xsl:attribute>
-                        <xsl:attribute name='href'><xsl:value-of select='@src' /></xsl:attribute>
-                    </link>
-                </xsl:for-each>
-                <xsl:for-each select='$pTemplate/*/rss'>
-                    <link>
-                        <xsl:attribute name='rel'>alternate</xsl:attribute>
-                        <xsl:attribute name='type'>application/rss+xml</xsl:attribute>
-                        <xsl:attribute name='href'><xsl:value-of select='@src' /></xsl:attribute>
-                    </link>
-                </xsl:for-each>
-                <xsl:for-each select='//*/rss'>
+                <xsl:for-each select='$siteSettings/*/global/rss | $pTemplate/*/rss | //*/rss'>
                     <link>
                         <xsl:attribute name='rel'>alternate</xsl:attribute>
                         <xsl:attribute name='type'>application/rss+xml</xsl:attribute>
@@ -126,56 +103,24 @@
 			<xsl:variable name='systemScripts' select="php:function('juniper_get_scripts')" />
 			<xsl:for-each select="$systemScripts/*/script"><xsl:copy-of select='.'/></xsl:for-each>
 -->
-                <xsl:for-each select="$siteSettings/*/global/script">
+                <xsl:for-each select="$siteSettings/*/global/script | //*/script">
                     <script>
-                        <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("resource_resolver::script_type", string(@src))'/>
-                        </xsl:attribute>
+                        <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("page_render::script_type", string(@src))'/></xsl:attribute>
                         <xsl:attribute name='src' >
-                            <xsl:value-of select='php:functionString("resource_resolver::resolve_ref", string(@src))' />
+                            <xsl:value-of select='php:functionString("page_render::resolve_ref", string(@src))' />
                         </xsl:attribute>
                     </script>
                 </xsl:for-each>
-                <xsl:for-each select='$pTemplate/*/script'>
+                <xsl:for-each select="$pTemplate/*/script">
                     <script>
-                        <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("resource_resolver::script_type", string(@src))'/>
-                        </xsl:attribute>
+                        <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("page_render::script_type", string(@src))'/></xsl:attribute>
                         <xsl:attribute name='src' >
-                            <xsl:value-of select='php:functionString("resource_resolver::resolve_ref", string(@src), "templates", string(@template))' />
+                            <xsl:value-of select='php:functionString("page_render::resolve_ref", string(@src), "templates", string($SRC/pagedef/@template))' />
                         </xsl:attribute>
-					&#160;
-                    </script>
-                </xsl:for-each>
-                <xsl:for-each select='//*/script'>
-                    <script>
-                        <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("resource_resolver::script_type", string(@src))'/></xsl:attribute>
-                        <xsl:attribute name='src' >
-                            <xsl:value-of select='php:functionString("resource_resolver::resolve_ref",@src)' />
-                        </xsl:attribute>
-					&#160;
                     </script>
                 </xsl:for-each>
 
-                <xsl:for-each select='$siteSettings/*/global/meta'>
-                    <meta>
-                        <xsl:attribute name='name'>
-                            <xsl:value-of select='@name' />
-                        </xsl:attribute>
-                        <xsl:attribute name='content'>
-                            <xsl:value-of select='@content' />
-                        </xsl:attribute>
-                    </meta>
-                </xsl:for-each>
-                <xsl:for-each select='$pTemplate/*/meta'>
-                    <meta>
-                        <xsl:attribute name='name'>
-                            <xsl:value-of select='@name' />
-                        </xsl:attribute>
-                        <xsl:attribute name='content'>
-                            <xsl:value-of select='@content' />
-                        </xsl:attribute>
-                    </meta>
-                </xsl:for-each>
-                <xsl:for-each select='//*/meta'>
+                <xsl:for-each select='$siteSettings/*/global/meta | $pTemplate/*/meta | //*/meta'>
                     <meta>
                         <xsl:attribute name='name'>
                             <xsl:value-of select='@name' />
@@ -186,13 +131,7 @@
                     </meta>
                 </xsl:for-each>
 
-                <xsl:for-each select='$siteSettings/*/global/header'>
-                    <xsl:copy-of select='node()'/>
-                </xsl:for-each>
-                <xsl:for-each select='$pTemplate/*/header'>
-                    <xsl:copy-of select='node()'/>
-                </xsl:for-each>
-                <xsl:for-each select='//*/header'>
+                <xsl:for-each select='$siteSettings/*/global/header | $pTemplate/*/header | //*/header'>
                     <xsl:copy-of select='node()'/>
                 </xsl:for-each>
 
@@ -204,7 +143,7 @@
                         <link>
                             <xsl:attribute name='rel'>shortcut icon</xsl:attribute>
                             <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("resource_resolver::resolve_ref", string(/shortcuticon/@icon),"i", 1)' />
+                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string(/shortcuticon/@icon))' />
                             </xsl:attribute>
                         </link>
                     </xsl:when>
@@ -212,7 +151,7 @@
                         <link>
                             <xsl:attribute name='rel'>shortcut icon</xsl:attribute>
                             <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("resource_resolver::resolve_ref", string($Template/*/shortcuticon/@icon),"i",1)' />
+                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string($Template/*/shortcuticon/@icon))' />
                             </xsl:attribute>
                         </link>
                     </xsl:when>
@@ -220,7 +159,7 @@
                         <link>
                             <xsl:attribute name='rel'>shortcut icon</xsl:attribute>
                             <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("resource_resolver::resolve_ref", string($gIcon),"i", 1)' />
+                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string($gIcon))' />
                             </xsl:attribute>
                         </link>
                     </xsl:when>
@@ -230,10 +169,10 @@
                         <link>
                             <xsl:attribute name='rel'>icon</xsl:attribute>
                             <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("resource_resolver::resolve_ref", string(/shortcuticon/@img),"i", 1)' />
+                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string(/shortcuticon/@img))' />
                             </xsl:attribute>
                             <xsl:attribute name='type'>
-                                <xsl:value-of select='php:functionString("resource_resolver::image_format",string(/shortcuticon/@img))' />
+                                <xsl:value-of select='php:functionString("page_render::image_format",string(/shortcuticon/@img))' />
                             </xsl:attribute>
                         </link>
                     </xsl:when>
@@ -241,10 +180,10 @@
                         <link>
                             <xsl:attribute name='rel'>icon</xsl:attribute>
                             <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("resource_resolver::resolve_ref", string($Template/*/shortcuticon/@img),"i", 1)' />
+                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string($Template/*/shortcuticon/@img))' />
                             </xsl:attribute>
                             <xsl:attribute name='type'>
-                                <xsl:value-of select='php:functionString("resource_resolver::image_format",string($Template/*/shortcuticon/@img))' />
+                                <xsl:value-of select='php:functionString("page_render::image_format",string($Template/*/shortcuticon/@img))' />
                             </xsl:attribute>
                         </link>
                     </xsl:when>
@@ -252,10 +191,10 @@
                         <link>
                             <xsl:attribute name='rel'>icon</xsl:attribute>
                             <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("resource_resolver::resolve_ref", string($PS//global/shortcuticon/@img),"i", 1)' />
+                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string($PS//global/shortcuticon/@img))' />
                             </xsl:attribute>
                             <xsl:attribute name='type'>
-                                <xsl:value-of select='php:functionString("resource_resolver::image_format",string($PS//global/shortcuticon/@img))' />
+                                <xsl:value-of select='php:functionString("page_render::image_format",string($PS//global/shortcuticon/@img))' />
                             </xsl:attribute>
                         </link>
                     </xsl:when>

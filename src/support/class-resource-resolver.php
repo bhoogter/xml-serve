@@ -2,26 +2,27 @@
 
 class resource_resolver
 {
-    // private static $_instance;
-    // public static function instance($resource_root = "")
-    // {
-    //     $value = self::$_instance ? self::$_instance : (self::$_instance = new resource_resolver());
-    //     if ($resource_root != "") $value->resource_root = $resource_root;
-    //     return $value;
-    // }
-
-    public static $http_root;
-    protected static $resource_root;
-    protected static $locations;
-
-    public static function init($resource_root = "", $http_root = "")
+    // This is settable from anywhere.
+    public static $instance;  
+    public static function instance($resource_root = "")
     {
-        if ($http_root != "") self::$http_root = $http_root;
-        if (self::$http_root == "") self::$http_root = realpath(dirname(__DIR__));
-        self::$locations = [];
+        $value = self::$instance ? self::$instance : (self::$instance = new resource_resolver());
+        if ($resource_root != "") $value->resource_root = $resource_root;
+        return $value;
+    }
 
-        if ($resource_root == "") self::$resource_root = __DIR__ . "/content";
-        else self::$resource_root = $resource_root;
+    public $http_root;
+    protected $resource_root;
+    protected $locations;
+
+    public function init($resource_root = "", $http_root = "")
+    {
+        if ($http_root != "") $this->http_root = $http_root;
+        if ($this->http_root == "") $this->http_root = realpath(dirname(__DIR__));
+        $this->locations = [];
+
+        if ($resource_root == "") $this->resource_root = __DIR__ . "/content";
+        else $this->resource_root = $resource_root;
 
         self::add_location("content");
         self::add_location("html");
@@ -30,20 +31,23 @@ class resource_resolver
         self::add_location("module", "modules/@@");
     }
 
-    private static function add_location($name, $loc = "")
+    private function add_location($name, $loc = "")
     {
-        if (!is_array(self::$locations)) self::init();
+        if (!is_array($this->locations)) $this->init();
         if ($loc == "") $loc = $name;
-        self::$locations[$name] = $loc;
+        $this->locations[$name] = $loc;
     }
 
-    private static function remove_location($name)
+    private function remove_location($name)
     {
-        unset(self::$locations[$name]);
+        if (!is_array($this->locations)) $this->init();
+        unset($this->locations[$name]);
     }
 
-    public static function resolve_files($resource, $types = [], $mappings = [], $subfolders = ['.', '*'])
+    public function resolve_files($resource, $types = [], $mappings = [], $subfolders = ['.', '*'])
     {
+        if (!is_array($this->locations)) $this->init();
+
         //  print "\n<br/>resource_resolver::resolve_files($resource, ..., ..., ...)"; print_r($types); print_r($mappings);
         if (is_string($types) && is_string($mappings)) {
             $mappings = [$types => $mappings];
@@ -59,12 +63,12 @@ class resource_resolver
         foreach ($types as $type) {
             // print "\n<br/>resource_resolver::resolve_files - type=$type";
             // print "\n<br/>resource_resolver::resolve_files - type=$type, res="; print_r($res);
-            $type_loc = !!isset(self::$locations[$type]) ? self::$locations[$type] : $type;
+            $type_loc = !!isset($this->locations[$type]) ? $this->locations[$type] : $type;
             // print "\n<br/>typeloc=$type_loc";
             $type_loc = str_replace("@@", isset($mappings[$type]) ? $mappings[$type] : '', $type_loc);
             // print "\n<br/>typeloc=$type_loc";
             // TODO: Other Mappings...
-            $loc = self::$resource_root . "/" . $type_loc;
+            $loc = $this->resource_root . "/" . $type_loc;
             // print "\n<br/>resource_resolver::resolve - loc: $loc";
             // print_r(glob($loc."//./*"));
             foreach ($subfolders as $subfolder) {
@@ -83,24 +87,24 @@ class resource_resolver
         return $res;
     }
 
-    public static function resolve_file($resource, $types = [], $mappings = [], $subfolders = ['.', '*'])
+    public function resolve_file($resource, $types = [], $mappings = [], $subfolders = ['.', '*'])
     {
-        $res = self::resolve_files($resource, $types, $mappings, $subfolders);
+        $res = $this->resolve_files($resource, $types, $mappings, $subfolders);
         return count($res) > 0 ? $res[0] : null;
     }
 
-    public static function resolve_ref($resource, $types = [], $mappings = [], $subfolders = ['.', '*'])
+    public function resolve_ref($resource, $types = [], $mappings = [], $subfolders = ['.', '*'])
     {
-        // print "\n<br/>resource_resolver::resolve_ref($resource, ...);";
-        $filename = self::resolve_file($resource, $types, $mappings, $subfolders);
-        $result = str_replace(self::$http_root, "", $filename);
+        print "\n<br/>resource_resolver::resolve_ref($resource, ...);";
+        $filename = $this->resolve_file($resource, $types, $mappings, $subfolders);
+        $result = str_replace($this->http_root, "", $filename);
         $result = str_replace("\\", "/", $result);
         return $result;
     }
 
-    public static function script_type($filename)
+    public function script_type($filename)
     {
-		$x = strrpos($fn, ".");
+		$x = strrpos($filename, ".");
         if ($x===false) return "text/javascript";
         switch (strtolower(substr($filename, $x + 1, 1))) {
             case 'j': return 'text/javascript';
@@ -108,14 +112,9 @@ class resource_resolver
             default: return 'text/javascript';
 
         }
-
-        $filename = self::resolve_file($resource, $types, $mappings, $subfolders);
-        $result = str_replace(self::$http_root, "", $filename);
-        $result = str_replace("\\", "/", $result);
-        return $result;
     }
 
-    function image_format($fn)
+    public function image_format($fn)
 		{
 		$x = strrpos($fn, ".");
 		if ($x===false) return "image/ico";

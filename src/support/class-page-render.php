@@ -10,11 +10,16 @@ class page_render {
 
     private static $handlers;
 
+    public static function resource_resolver($rr = null) {
+        if ($rr != null) resource_resolver::$instance = $rr;
+        return resource_resolver::instance();
+    }
+
     protected static function init_handlers() {
         if (is_array(self::$handlers)) return;
         self::include_support();
         self::$handlers = [];
-        self::add_handler("content", "make_page_render_content::render_content");
+        self::add_handler("content", "render_content::render");
     }
 
     public static function generator_name() {
@@ -53,7 +58,8 @@ class page_render {
 
     public static function include_support() {
         $d = (strpos(__FILE__, ".phar") === false ? __DIR__ : "phar://" . __FILE__ . "/src");
-        require_once($d . "/renderers/make_page_render_content.php");
+        require_once($d . "/renderers/render_base.php");
+        require_once($d . "/renderers/render_content.php");
     }
 
     public static function get($path) { return self::$pagedef->get($path); }
@@ -82,11 +88,31 @@ class page_render {
         self::$pagedef = $pagedef;
         $template_name = self::get("/pagedef/@template");
         // print "\n<br/>page_render::make_page - template_name=$template_name";
-        $template_file = resource_resolver::resolve_file("template.xml", "template", $template_name);
+        $template_file = self::resource_resolver()->resolve_file("template.xml", "template", $template_name);
         // print "\n<br/>page_render::make_page - template_file=$template_file";
         if ($template_file == null) return null;
         self::$template = new xml_file($template_file);
         $result = new xml_file(xml_file::transformXMLXSL_static($pagedef->saveXML(), self::make_page_xsl(), true));
         return $result;
+    }
+
+    public static function resolve_files($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) {
+        return self::resource_resolver()->resolve_files($resource, $types, $mappings, $subfolders);
+    }
+
+    public static function resolve_file($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) {
+        return self::resource_resolver()->resolve_file($resource, $types, $mappings, $subfolders);
+    }
+
+    public static function resolve_ref($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) {
+        return self::resource_resolver()->resolve_ref($resource, $types, $mappings, $subfolders);
+    }
+
+    public static function script_type($filename) {
+        return self::resource_resolver()->script_type($filename);
+    }
+
+    public static function image_format($fn) {
+        return self::resource_resolver()->image_format($fn);
     }
 }
