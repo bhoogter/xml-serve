@@ -36,7 +36,8 @@ class page_render_tests extends TestCase
         $this->assertTrue(strpos($xhtml, '/content/css/global.css') !== false);
         $this->assertTrue(strpos($xhtml, '/content/templates/main/style.css') !== false);
         $this->assertTrue(strpos($xhtml, '/content/templates/main/color.css') !== false);
-        $this->assertTrue(strpos($xhtml, '/content/css/global-for-template.css') !== false);
-
+        $this->assertTrue(strpos($xhtml, 'a,b,c') !== false);
+        $this->assertTrue(strpos($xhtml, 'Main Page - ') !== false);
+        $this->assertTrue(strpos($xhtml, 'a new page') !== false);
     }
 }

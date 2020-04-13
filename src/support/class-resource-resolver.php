@@ -27,6 +27,8 @@ class resource_resolver
         self::add_location("content");
         self::add_location("html");
         self::add_location("system");
+        self::add_location("css");
+        self::add_location("scripts");
         self::add_location("template", "templates/@@");
         self::add_location("module", "modules/@@");
     }
@@ -48,7 +50,7 @@ class resource_resolver
     {
         if (!is_array($this->locations)) $this->init();
 
-         print "\n<br/>resource_resolver::resolve_files($resource, ..., ..., ...)"; print_r($types); print_r($mappings);
+        //  print "\n<br/>resource_resolver::resolve_files($resource, ..., ..., ...)"; print_r($types); print_r($mappings);
         if (is_string($types) && is_string($mappings)) {
             $mappings = [$types => $mappings];
             $types = [$types];

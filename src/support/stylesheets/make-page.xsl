@@ -233,7 +233,7 @@
             <xsl:otherwise>
                 <xsl:copy>
                     <xsl:for-each select='@*'><xsl:copy-of select='.' /></xsl:for-each>
-                    <xsl:for-each select='*'>
+                    <xsl:for-each select='*|text()'>
                         <xsl:call-template name='bodytemplate' />
                     </xsl:for-each>
                 </xsl:copy>
