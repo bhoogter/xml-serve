@@ -11,7 +11,7 @@ class page_lookup extends TestCase
 
 	public static function setUpBeforeClass(): void
 	{
-		self::$subject = new xml_pages(self::PAGES_XML, __DIR__ . "/resources");
+		self::$subject = new xml_serve(self::PAGES_XML, __DIR__ . "/resources");
 	}
 
 	public function lookupPageId($path)

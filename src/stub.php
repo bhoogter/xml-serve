@@ -6,7 +6,7 @@ dependency_manager("pages", null, __DIR__ . "/phars/");
 
 spl_autoload_register(function ($name) {
     $d = (strpos(__FILE__, ".phar") === false ? __DIR__ : "phar://" . __FILE__ . "/src");
-    if ($name == "xml_pages") require_once($d . "/class-xml-pages.php");
+    if ($name == "xml_serve") require_once($d . "/class-xml-serve.php");
     if ($name == "page_render") require_once($d . "/support/class-page-render.php");
     if ($name == "resource_resolver") require_once($d . "/support/class-resource-resolver.php");
 });

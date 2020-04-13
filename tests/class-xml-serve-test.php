@@ -8,18 +8,18 @@ class pages_test extends TestCase
 
 	public function testCreatePagesClass(): void
 	{
-		$obj = new xml_pages();
+		$obj = new xml_serve();
 		$this->assertNotNull($obj);
 	}
 	
 	public function testCreatePagesClassWithFile(): void {
-		$obj = new xml_pages(self::PAGES_XML);
+		$obj = new xml_serve(self::PAGES_XML);
 		$this->assertNotNull($obj);
 	}
 
 	public function testCreatePagesClassWithXmlFileObject(): void {
 		$xmlobj = new xml_file(self::PAGES_XML);
-		$obj = new xml_pages($xmlobj);
+		$obj = new xml_serve($xmlobj);
 		$this->assertNotNull($obj);
 	}
 }

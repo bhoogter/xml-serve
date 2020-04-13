@@ -1,6 +1,6 @@
 <?php
 
-class xml_pages
+class xml_serve
 {
     private $pages_source;
     private $resource_folder;
