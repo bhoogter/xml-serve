@@ -48,7 +48,7 @@ class resource_resolver
     {
         if (!is_array($this->locations)) $this->init();
 
-        //  print "\n<br/>resource_resolver::resolve_files($resource, ..., ..., ...)"; print_r($types); print_r($mappings);
+         print "\n<br/>resource_resolver::resolve_files($resource, ..., ..., ...)"; print_r($types); print_r($mappings);
         if (is_string($types) && is_string($mappings)) {
             $mappings = [$types => $mappings];
             $types = [$types];
@@ -95,7 +95,7 @@ class resource_resolver
 
     public function resolve_ref($resource, $types = [], $mappings = [], $subfolders = ['.', '*'])
     {
-        print "\n<br/>resource_resolver::resolve_ref($resource, ...);";
+        // print "\n<br/>resource_resolver::resolve_ref($resource, ...);";
         $filename = $this->resolve_file($resource, $types, $mappings, $subfolders);
         $result = str_replace($this->http_root, "", $filename);
         $result = str_replace("\\", "/", $result);

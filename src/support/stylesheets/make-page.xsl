@@ -72,23 +72,16 @@
 			<xsl:variable name='systemStyles' select="php:function('juniper_get_styles')" />
 			<xsl:for-each select="$systemStyles/*/link"><xsl:copy-of select='.'/></xsl:for-each>
 -->
-                <xsl:for-each select='$siteSettings/*/global/css | //*/css'>
-                    <link>
-                        <xsl:attribute name='rel'>stylesheet</xsl:attribute>
-                        <xsl:attribute name='type'>text/css</xsl:attribute>
-                        <xsl:attribute name='href'>
-                            <xsl:value-of select='php:functionString("page_render::resolve_ref", string(@src))' />
-                        </xsl:attribute>
-                    </link>
-                </xsl:for-each>
-                <xsl:for-each select='$pTemplate/*/css'>
-                    <link>
-                        <xsl:attribute name='rel'>stylesheet</xsl:attribute>
-                        <xsl:attribute name='type'>text/css</xsl:attribute>
-                        <xsl:attribute name='href'>
-                            <xsl:value-of select='php:functionString("page_render::resolve_ref", string(@src), "templates", string($SRC/pagedef/@template))' />
-                        </xsl:attribute>
-                    </link>
+                <xsl:for-each select='$siteSettings/*/global/css | //*/css | $pTemplate/*/css'>
+                    <xsl:variable name='location'><xsl:if test='name(..) = "pagetemplate"'>template</xsl:if></xsl:variable>
+                    <xsl:variable name='href' select='php:functionString("page_render::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
+                    <xsl:if test='string-length($href) != 0'>
+                        <link>
+                            <xsl:attribute name='rel'>stylesheet</xsl:attribute>
+                            <xsl:attribute name='type'>text/css</xsl:attribute>
+                            <xsl:attribute name='href'><xsl:value-of select='$href' /></xsl:attribute>
+                        </link>
+                    </xsl:if>
                 </xsl:for-each>
 
                 <xsl:for-each select='$siteSettings/*/global/rss | $pTemplate/*/rss | //*/rss'>
@@ -103,21 +96,17 @@
 			<xsl:variable name='systemScripts' select="php:function('juniper_get_scripts')" />
 			<xsl:for-each select="$systemScripts/*/script"><xsl:copy-of select='.'/></xsl:for-each>
 -->
-                <xsl:for-each select="$siteSettings/*/global/script | //*/script">
-                    <script>
-                        <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("page_render::script_type", string(@src))'/></xsl:attribute>
-                        <xsl:attribute name='src' >
-                            <xsl:value-of select='php:functionString("page_render::resolve_ref", string(@src))' />
-                        </xsl:attribute>
-                    </script>
-                </xsl:for-each>
-                <xsl:for-each select="$pTemplate/*/script">
-                    <script>
-                        <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("page_render::script_type", string(@src))'/></xsl:attribute>
-                        <xsl:attribute name='src' >
-                            <xsl:value-of select='php:functionString("page_render::resolve_ref", string(@src), "templates", string($SRC/pagedef/@template))' />
-                        </xsl:attribute>
-                    </script>
+                <xsl:for-each select="$siteSettings/*/global/script | //*/script | $pTemplate/*/script">
+                    <xsl:variable name='location'><xsl:if test='name(..) = "pagetemplate"'>template</xsl:if></xsl:variable>
+                    <xsl:variable name='src' select='php:functionString("page_render::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
+                    <xsl:if test='string-length($src) != 0'>
+                        <script>
+                            <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("page_render::script_type", string(@src))'/></xsl:attribute>
+                            <xsl:attribute name='src' >
+                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
+                            </xsl:attribute>
+                        </script>
+                    </xsl:if>
                 </xsl:for-each>
 
                 <xsl:for-each select='$siteSettings/*/global/meta | $pTemplate/*/meta | //*/meta'>

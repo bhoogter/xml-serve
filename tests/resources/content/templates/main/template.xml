@@ -11,6 +11,7 @@
 
 	<css src='color.css'/>
 	<css src='style.css'/>
+    <css src='global-for-template.css'/>
 	<images src='images/'/>
 
 	<content id="logo"		type="html"	src="logo.html" />

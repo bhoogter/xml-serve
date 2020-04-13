@@ -30,10 +30,13 @@ class page_render_tests extends TestCase
         $candidate = $this->candidatePage1();
         $result = page_render::make_page($candidate);
 
-        print "\n---------------------------------\n";
-        print(xml_file::make_tidy_string($result->saveXML(), "xml"));
-        print "\n---------------------------------\n";
+        $xhtml = xml_file::make_tidy_string($result->saveXML(), "xml");
+        print "\n---------------------------------\n{$xhtml}\n---------------------------------\n";
 
-        $this->assertTrue(true);
+        $this->assertTrue(strpos($xhtml, '/content/css/global.css') !== false);
+        $this->assertTrue(strpos($xhtml, '/content/templates/main/style.css') !== false);
+        $this->assertTrue(strpos($xhtml, '/content/templates/main/color.css') !== false);
+        $this->assertTrue(strpos($xhtml, '/content/css/global-for-template.css') !== false);
+
     }
 }
