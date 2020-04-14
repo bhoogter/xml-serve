@@ -15,8 +15,9 @@ before_deploy:
 - php box.phar build
 deploy:
   provider: releases
+  skip_cleanup: true
+  file: xml-serve.phar
   api_key:
     secure: D0SYTD5pMoECXyq8oSqqAh05ecEiPdvAqIZsUCa77yq1Z3r36ov4VwMf7oUNedwSK7honY4D1r7K3ammHBYYsfCDu49DinC/XRLf9y6R3kBiwHa4u/rCCv2n4A3xXlg59S3xTPkufF/6vj79QY29T87lCc/4r4VXjw7BsqDCFGzIc9NUSHjIPxPOxHqIiWRj337fpK7UvrWm+1sjhcD5ChpaF7OcBZ9+CabCzqfxAS/9au87gejik3DkImqNcQcd2yo0s+1d3EHu8xEoDSh28oDdhX71etpe4MnAe+hG0X2F3KroHETYdv3nj63CCjzHty6C/F0fgISO3vcNNTFBu0JuoBrIOvO/vN57IYfhLd1dT84ro/0PYrPfAuJhVux2w5eF+bUea7XAi9lyBvnnI8WMOtbjXEgSMzvZyz+y7GzytZdpUxMPAd8fLpk+HlLf1a6dACarRQlYB8SL6rWYl5vAWq0tX0ZC22An/QqM6lL/Hxi/EHXA92sF0wyyAT8n8bz9jLdAYbiAQubaZUpv18Su2kfviskU16wQbCO9oeNFfqgI1eFwNAGS3GnFvUM/Lq6+fR8hpOiS/wZU9nDEaIr4JJaQ3hFjd2925SUFWnVpxJtkzpT8ECF5Lw7VR0LsUfj1QB9Ki5oFImDnvM2UyI6pPKfINabpF8edYH/hE2E=
-  file: xml-serve.phar
   on:
     repo: bhoogter/xml-serve
