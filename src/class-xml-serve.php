@@ -42,7 +42,7 @@ class xml_serve
     {
         $pageset = "";
         $element = $this->page_part_element($index, $pageset);
-        // print ("\n<br/>xml-pages::page_part - pageset=$pageset");
+        php_logger::log("xml-pages::page_part - pageset=$pageset");
         if ($element == null) return null;
         return $this->new_pagepart_xml($element, $pageset);
     }
@@ -50,13 +50,13 @@ class xml_serve
     function page_part_element($index, &$pageset = "")
     {
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
-        // print "\n<br/>xml-pages::page_part($index, $pageset)";
+        php_logger::log("xml-pages::page_part($index, $pageset)");
         if (substr($index, 0, 1) == '/') $index = substr($index, 1);
         if (substr($index, -1) == '/') $index = substr($index, 0, strlen($index) - 1);
-        //print "\n<br/>xml-pages::page_part($index, $pageset)";
+        php_logger::log("xml-pages::page_part($index, $pageset)");
         if (($this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@loc='$index']"))  != null) {
             $subpageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@pageset");
-            // print "\n<br/>xml-pages::page_part - exact match $index (pageset=$pageset)";
+            php_logger::log("xml-pages::page_part - exact match $index (pageset=$pageset)");
 
             if ($subpageset != null) {
                 $pageset = $subpageset;
@@ -76,24 +76,24 @@ class xml_serve
                 $rest = substr($path, $x + 1) . ($rest == "" ? "" : "/") . $rest;
                 $path = substr($path, 0, $x);
             }
-            // print "\n<br/>xml-pages::page_part - Searching path tree: path=$path, rest=$rest";
-            // print "\n<br/>xml-pages::page_part - Searching: /pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset";
+            php_logger::log("xml-pages::page_part - Searching path tree: path=$path, rest=$rest");
+            php_logger::log("xml-pages::page_part - Searching: /pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
 
             $subpageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
             if ($subpageset != null) {
-                // print "\n<br/>xml-pages::page_part - subpath pageset $pageset";
+                php_logger::log("xml-pages::page_part - subpath pageset $pageset");
                 $pageset = $subpageset;
                 $subset_result = $this->page_part_element($rest, $pageset);
                 if ($subset_result != null) return $subset_result;
-                // print "\n<br/>xml-pages::page_part - subpath didn't find.  No 404 handler provided.";
+                php_logger::log("xml-pages::page_part - subpath didn't find.  No 404 handler provided.");
                 break;
             }
         }
 
         if ($index == "") {
-            // print "\n<br/>xml-pages::page_part - Checking default on /pages/pageset[$pageset_check]/pagedef[@default]/@loc";
+            php_logger::log("xml-pages::page_part - Checking default on /pages/pageset[$pageset_check]/pagedef[@default]/@loc");
             if ($this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@default]/@loc") != '') {
-                // print "\n<br/>xml-pages::page_part - default match";
+                php_logger::log("xml-pages::page_part - default match");
                 return $this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@default]");
             }
         } else {
@@ -104,7 +104,7 @@ class xml_serve
             }
         }
 
-        // print "\n<br/>xml-pages::page_part - NO MATCH";
+        php_logger::log("xml-pages::page_part - NO MATCH");
         return null;
     }
 
