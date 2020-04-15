@@ -7,12 +7,12 @@
     <xsl:preserve-space elements="script style pre"/>
 
     <xsl:variable name='siteSettings' select='php:functionString("page_render::site_settings_dom")' />
-    <xsl:variable name='gTitle' select="$siteSettings/*/global/title" />
-    <xsl:variable name='bAppendSiteTitle' select='$siteSettings/*/global/title/@append' />
-
     <xsl:variable name='pTemplate' select='php:functionString("page_render::template_dom")' />
     <xsl:variable name='SRC' select='.' />
+
     <xsl:variable name='HandledElements' select='php:functionString("page_render::handler_list")'/>
+    <xsl:variable name='gTitle' select="$siteSettings/*/global/title" />
+    <xsl:variable name='bAppendSiteTitle' select='$siteSettings/*/global/title/@append' />
 
     <xsl:template match='/'>
         <xsl:variable name='debug_make_page' select='php:functionString("constant", "page_render::DEBUG_MAKE_PAGE")' />

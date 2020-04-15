@@ -38,15 +38,6 @@ class xml_serve
         return $xml;
     }
 
-    function page_part($index)
-    {
-        $pageset = "";
-        $element = $this->page_part_element($index, $pageset);
-        php_logger::log("xml-pages::page_part - pageset=$pageset");
-        if ($element == null) return null;
-        return $this->new_pagepart_xml($element, $pageset);
-    }
-
     function page_part_element($index, &$pageset = "")
     {
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
@@ -108,16 +99,21 @@ class xml_serve
         return null;
     }
 
+    function page_part($index)
+    {
+        $pageset = "";
+        $element = $this->page_part_element($index, $pageset);
+        php_logger::log("xml-pages::page_part - pageset=$pageset");
+        if ($element == null) return null;
+        return $this->new_pagepart_xml($element, $pageset);
+    }
+
     function parse_special($pagedef) {
-        // 301 Moved Permanently
-        // 302 Found
-        // 303 See Other
-        // 307 Temporary Redirect
-        
+        // 301 Moved Permanently, 302 Found, 303 See Other, 307 Temporary Redirect
         if (($url = $pagedef->get("/@redirect")) != '') {
             $type = $pagedef->get("/@redirect-type");
             if ($type == '') $type = 301;
-            die(header("Location: $url",TRUE,307));
+            die(header("Location: $url",TRUE,$type));
         }
     }
 

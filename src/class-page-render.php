@@ -83,14 +83,6 @@ class page_render {
         return self::$settings->Doc;
     }
 
-    public static function resolve_files($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) {
-        return self::resource_resolver()->resolve_files($resource, $types, $mappings, $subfolders);
-    }
-
-    public static function resolve_file($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) {
-        return self::resource_resolver()->resolve_file($resource, $types, $mappings, $subfolders);
-    }
-
     public static function resolve_ref($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) {
         return self::resource_resolver()->resolve_ref($resource, $types, $mappings, $subfolders);
     }
