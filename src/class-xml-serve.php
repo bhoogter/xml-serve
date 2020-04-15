@@ -18,11 +18,26 @@ class xml_serve
         }
     }
 
-    function template_folder()          {        return $this->resource_folder;    }
-    function pages_source()             {        return $this->pages_source;    }
-    function source_part_get($index)    {        return $this->pages_source()->get($index);    }
-    function source_part_nde($index)    {        return $this->pages_source()->nde($index);    }
-    function source_part_def($index)    {        return $this->pages_source()->def($index);    }
+    function template_folder()
+    {
+        return $this->resource_folder;
+    }
+    function pages_source()
+    {
+        return $this->pages_source;
+    }
+    function source_part_get($index)
+    {
+        return $this->pages_source()->get($index);
+    }
+    function source_part_nde($index)
+    {
+        return $this->pages_source()->nde($index);
+    }
+    function source_part_def($index)
+    {
+        return $this->pages_source()->def($index);
+    }
 
     protected function new_pagepart_xml($element, $pageset)
     {
@@ -108,12 +123,19 @@ class xml_serve
         return $this->new_pagepart_xml($element, $pageset);
     }
 
-    function parse_special($pagedef) {
+    function parse_special($pagedef)
+    {
         // 301 Moved Permanently, 302 Found, 303 See Other, 307 Temporary Redirect
+        if ($pagedef == null) {
+            http_response_code(404);
+            // include('404.php');
+            print "404 Not Found";
+            die();
+        }
         if (($url = $pagedef->get("/@redirect")) != '') {
             $type = $pagedef->get("/@redirect-type");
             if ($type == '') $type = 301;
-            die(header("Location: $url",TRUE,$type));
+            die(header("Location: $url", TRUE, $type));
         }
     }
 
