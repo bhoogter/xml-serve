@@ -61,7 +61,7 @@ class page_render
     {
         $d = (strpos(__FILE__, ".phar") === false ? __DIR__ : "phar://" . __FILE__ . "/src");
         $filename = $d . "/stylesheets/make-page.xsl";
-        // print "\n<br/>filename=$filename";
+        php_logger::debug("filename=$filename", __DIR__, __FILE__);
         return file_get_contents($filename);
     }
 
