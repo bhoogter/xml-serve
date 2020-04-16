@@ -66,9 +66,9 @@ class page_render
 
     public static function include_support()
     {
-        $d = (strpos(__FILE__, ".phar") === false ? __DIR__ : "phar://" . __FILE__ . "/src");
-        require_once($d . "/renderers/render_base.php");
-        require_once($d . "/renderers/render_content.php");
+        php_logger::trace(__DIR__);
+        require_once(__DIR__ . "/renderers/render_base.php");
+        require_once(__DIR__ . "/renderers/render_content.php");
     }
 
     public static function get($path)
