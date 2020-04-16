@@ -53,7 +53,7 @@ class xml_serve
         return $xml;
     }
 
-    function page_part_element($index, &$pageset = "", &$http_result = 200)
+    protected function page_part_element($index, &$pageset = "", &$http_result = 200)
     {
         php_logger::log("CALL ($index, $pageset)");
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
