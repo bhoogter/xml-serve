@@ -149,6 +149,7 @@ class xml_serve
         php_logger::log("CALL ($index)");
         $http_result = 200;
         $pagedef = $this->page_part($index, $http_result);
+        php_logger::debug("HTTP RESULT: $http_result");
         $this->parse_special($pagedef, $http_result);
         $page = page_render::make_page($pagedef);
         $result = xml_file::make_tidy_string($page->saveXML());
