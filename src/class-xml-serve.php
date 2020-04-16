@@ -49,7 +49,6 @@ class xml_serve
             $xml->set("/pagedef/@template", $template);
         else if (($template = $this->source_part_get("/pages/pageset[@default]/@template")) != '')
             $xml->set("/pagedef/@template", $template);
-        print $xml->saveXML();
         return $xml;
     }
 
