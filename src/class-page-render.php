@@ -59,8 +59,7 @@ class page_render
 
     public static function make_page_xsl()
     {
-        $d = (strpos(__FILE__, ".phar") === false ? __DIR__ : "phar://" . __FILE__ . "/src");
-        $filename = $d . "/stylesheets/make-page.xsl";
+        $filename = __DIR__ . "/stylesheets/make-page.xsl";
         php_logger::debug("filename=$filename", __DIR__, __FILE__);
         return file_get_contents($filename);
     }
