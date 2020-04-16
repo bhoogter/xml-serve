@@ -25,11 +25,11 @@ class xml_serve
 
         if ($n >= 3) {
             if (is_object($a[2])) page_render::$settings = $a[2];
-            else if (file_exists($l = realpath($a[2]))) $this->pages_source = new xml_file($l);
-            else if (file_exists($l = realpath($this->resource_folder . $a[2]))) $this->pages_source = new xml_file($l);
-            else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) $this->pages_source = new xml_file($l);
+            else if (file_exists($l = realpath($a[2]))) page_render::$settings = new xml_file($l);
+            else if (file_exists($l = realpath($this->resource_folder . $a[2]))) page_render::$settings = new xml_file($l);
+            else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) page_render::$settings = new xml_file($l);
         }
-        if ($this->pages_source == null) throw new Exception("Missing argument 3: site settings (filename, xml_file)");
+        if (page_render::$settings == null) throw new Exception("Missing argument 3: site settings (filename, xml_file)");
     }
 
     function template_folder()     {        return $this->resource_folder;    }
