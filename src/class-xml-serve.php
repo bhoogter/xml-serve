@@ -10,34 +10,33 @@ class xml_serve
         $n = func_num_args();
         $a = func_get_args();
         if ($n >= 1) {
-            if (is_object($a[0])) $this->pages_source = $a[0];
-            else $this->pages_source = new xml_file($a[0]);
+            $this->resource_folder = $a[0];
+        } else {
+            throw new Exception("Missing argument 1: resource_folder (string path)");
         }
+
         if ($n >= 2) {
-            $this->resource_folder = $a[1];
+            if (is_object($a[1])) $this->pages_source = $a[1];
+            else if (file_exists($l = realpath($a[1]))) $this->pages_source = new xml_file($l);
+            else if (file_exists($l = realpath($this->resource_folder . $a[1]))) $this->pages_source = new xml_file($l);
+            else if (file_exists($l = realpath(__DIR__ . "/pages.xml"))) $this->pages_source = new xml_file($l);
         }
+        if ($this->pages_source == null) throw new Exception("Missing argument 2: pages source (filename, xml_file)");
+
+        if ($n >= 3) {
+            if (is_object($a[2])) page_render::$settings = $a[2];
+            else if (file_exists($l = realpath($a[2]))) $this->pages_source = new xml_file($l);
+            else if (file_exists($l = realpath($this->resource_folder . $a[2]))) $this->pages_source = new xml_file($l);
+            else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) $this->pages_source = new xml_file($l);
+        }
+        if ($this->pages_source == null) throw new Exception("Missing argument 3: site settings (filename, xml_file)");
     }
 
-    function template_folder()
-    {
-        return $this->resource_folder;
-    }
-    function pages_source()
-    {
-        return $this->pages_source;
-    }
-    function source_part_get($index)
-    {
-        return $this->pages_source()->get($index);
-    }
-    function source_part_nde($index)
-    {
-        return $this->pages_source()->nde($index);
-    }
-    function source_part_def($index)
-    {
-        return $this->pages_source()->def($index);
-    }
+    function template_folder()     {        return $this->resource_folder;    }
+    function pages_source()    {        return $this->pages_source;    }
+    function source_part_get($index)    {        return $this->pages_source()->get($index);    }
+    function source_part_nde($index)    {        return $this->pages_source()->nde($index);    }
+    function source_part_def($index)    {        return $this->pages_source()->def($index);    }
 
     protected function new_pagepart_xml($element, $pageset)
     {
