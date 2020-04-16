@@ -41,6 +41,7 @@ class xml_serve
 
     protected function new_pagepart_xml($element, $pageset)
     {
+        php_logger::log("CALL (..., $pageset)");
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
         // print xml_file::nodeXml($element);
         $xml = xml_file::nodeXmlFile($element);
@@ -52,16 +53,16 @@ class xml_serve
         return $xml;
     }
 
-    function page_part_element($index, &$pageset = "")
+    function page_part_element($index, &$pageset = "", &$http_result = 200)
     {
+        php_logger::log("CALL ($index, $pageset)");
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
-        php_logger::log("xml-serve::page_part($index, $pageset)");
         if (substr($index, 0, 1) == '/') $index = substr($index, 1);
         if (substr($index, -1) == '/') $index = substr($index, 0, strlen($index) - 1);
-        php_logger::log("xml-serve::page_part($index, $pageset)");
+        php_logger::log("CALL ($index, $pageset)");
         if (($this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@loc='$index']"))  != null) {
             $subpageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@pageset");
-            php_logger::log("xml-serve::page_part - exact match $index (pageset=$pageset)");
+            php_logger::log("exact match $index (pageset=$pageset)");
 
             if ($subpageset != null) {
                 $pageset = $subpageset;
@@ -81,49 +82,54 @@ class xml_serve
                 $rest = substr($path, $x + 1) . ($rest == "" ? "" : "/") . $rest;
                 $path = substr($path, 0, $x);
             }
-            php_logger::log("xml-serve::page_part - Searching path tree: path=$path, rest=$rest");
-            php_logger::log("xml-serve::page_part - Searching: /pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
+            php_logger::log("Searching path tree: path=$path, rest=$rest");
+            php_logger::debug("Searching: /pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
 
             $subpageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
             if ($subpageset != null) {
-                php_logger::log("xml-serve::page_part - subpath pageset $pageset");
+                php_logger::trace("subpath pageset $pageset");
                 $pageset = $subpageset;
                 $subset_result = $this->page_part_element($rest, $pageset);
                 if ($subset_result != null) return $subset_result;
-                php_logger::log("xml-serve::page_part - subpath didn't find.  No 404 handler provided.");
+                php_logger::trace("subpath didn't find.  No 404 handler provided.");
                 break;
             }
         }
 
         if ($index == "") {
-            php_logger::log("xml-serve::page_part - Checking default on /pages/pageset[$pageset_check]/pagedef[@default]/@loc");
+            php_logger::debug("CALL  - Checking default on /pages/pageset[$pageset_check]/pagedef[@default]/@loc");
             if ($this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@default]/@loc") != '') {
-                php_logger::log("xml-serve::page_part - default match");
+                php_logger::trace("CALL  - default match");
                 return $this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@default]");
             }
         } else {
-            // print "\n<br/>xml-serve::page_part - Checking 404 on /pages/pageset[$pageset_check]/pagedef[@default404]/@loc";
+            php_logger::trace("Checking 404 on /pages/pageset[$pageset_check]/pagedef[@default404]/@loc");
             if ($this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@default404]/@loc") != '') {
-                // print "\n<br/>xml-serve::page_part - 404 match";
+                php_logger::trace("404 match");
+                $http_result = 404;
                 return $this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@default404]");
             }
         }
 
-        php_logger::log("xml-serve::page_part - NO MATCH");
+        $http_result = 404;
+        php_logger::log("NO MATCH");
         return null;
     }
 
-    function page_part($index)
+    function page_part($index, &$http_result = 200)
     {
+        php_logger::log("CALL ($index)");
         $pageset = "";
-        $element = $this->page_part_element($index, $pageset);
-        php_logger::log("xml-serve::page_part - pageset=$pageset");
+        $element = $this->page_part_element($index, $pageset, $http_result);
+        php_logger::debug("pageset=$pageset, http_result=$http_result");
         if ($element == null) return null;
         return $this->new_pagepart_xml($element, $pageset);
     }
 
-    function parse_special($pagedef)
+    function parse_special($pagedef, $http_result = 200)
     {
+        php_logger::log("CALL (..., $http_result)", $pagedef);
+        http_response_code($http_result);
         // 301 Moved Permanently, 302 Found, 303 See Other, 307 Temporary Redirect
         if ($pagedef == null) {
             http_response_code(404);
@@ -140,9 +146,10 @@ class xml_serve
 
     function get_page($index)
     {
-        php_logger::log("xml-serve::get_page($index)");
-        $pagedef = $this->page_part($index);
-        $this->parse_special($pagedef);
+        php_logger::log("CALL ($index)");
+        $http_result = 200;
+        $pagedef = $this->page_part($index, $http_result);
+        $this->parse_special($pagedef, $http_result);
         $page = page_render::make_page($pagedef);
         $result = xml_file::make_tidy_string($page->saveXML());
         return $result;
