@@ -4,11 +4,13 @@ class page_render
 {
     public const DEBUG_MAKE_PAGE = "";
 
+    protected static $generator = "PAGE_RENDER";
+
     protected static $pagedef;
     protected static $template;
     protected static $settings;
 
-    private $handlers;
+    private static $handlers;
 
     public static function resource_resolver($rr = null)
     {
@@ -24,67 +26,85 @@ class page_render
     public static function template_dom() { if (!self::$template) throw new Exception("No template set."); return self::$template->Doc; }
     public static function settings_dom() { if (!self::$settings) throw new Exception("Settings DOM not set."); return self::$settings->Doc; }
 
-    public function generator_name() { return strtoupper(get_class()); }
+    public static function xml_content($xml) { return (new xml_file($xml))->Doc; }
+    public static function empty_content() { return self::xml_content("<?xml version='1.0'?><div /"); }
 
-    protected function init_handlers()
+    public static function generator_name() { return self::$generator; }
+
+    protected static function init_handlers()
     {
-        if (is_array($this->handlers)) return;
-        $this->include_support();
-        $this->handlers = [];
-        $this->add_handler("content", "render_content::render");
+        if (is_array(self::$handlers)) return;
+        self::include_support();
+        self::$handlers = [];
+        self::add_handler("content", "render_content::render");
     }
 
 
-    public function add_handler($type, $handler)
+    public static function add_handler($type, $handler, $priority = 0)
     {
-        $this->init_handlers();
-        $this->handlers[$type] = $handler;
+        self::init_handlers();
+        if (!isset(self::$handlers[$type]))
+          self::$handlers[$type] = [];
+        while (isset(self::$handlers[$type][$priority])) $priority++;
+        self::$handlers[$type][$priority] = $handler;
+        return $priority;
     }
 
-    public function remove_handler($type)
+    public static function get_handlers($type)
     {
-        $this->init_handlers();
-        unset($this->handlers[$type]);
+        self::init_handlers();
+        if (!isset(self::$handlers[$type])) return [];
+        return self::$handlers[$type];
     }
 
-    public function handler_list()
+    public static function set_handlers($type, $handlers = [])
     {
-        $this->init_handlers();
-        $result = "," . join(",", array_keys($this->handlers)) . ",";
+        self::init_handlers();
+        self::$handlers[$type] = $handlers;
+    }    
+
+    public static function remove_handler($type, $idx)
+    {
+        self::init_handlers();
+        if (isset(self::$handlers[$type][$idx]))
+            unset(self::$handlers[$type][$idx]);
+    }
+
+    public static function handler_list()
+    {
+        self::init_handlers();
+        $result = "," . join(",", array_keys(self::$handlers)) . ",";
         return $result;
     }
 
-    public function handle_element($type, $El)
+    public static function handle_element($type, $El)
     {
-        if (!isset($this->handlers[$type])) return null;
-        $handler = $this->handlers[$type];
-        $result = call_user_func($handler, $El);
+        if (!isset(self::$handlers[$type])) return null;
+        $handlers = self::$handlers[$type];
+        $result = $El;
+        foreach($handlers as $h) {
+            $result = call_user_func($h, $result);
+            if ($result == null) break;
+        }   
+        if ($result == null) return self::empty_content();
         return $result;
     }
 
-    public function make_page_xsl()
+    public static function make_page_xsl()
     {
         $filename = __DIR__ . "/stylesheets/make-page.xsl";
         php_logger::debug("filename=$filename", __DIR__, __FILE__);
         return file_get_contents($filename);
     }
 
-    public function include_support()
+    public static function include_support()
     {
         php_logger::trace(__DIR__);
-        require_once(__DIR__ . "/renderers/render_base.php");
         require_once(__DIR__ . "/renderers/render_content.php");
     }
 
-    public function get($path)
-    {
-        return $this->pagedef->get($path);
-    }
-
-    public function template_name()
-    {
-        return $this->pagedef->get("/pagedef/@template");
-    }
+    public static function get($path) { return self::$pagedef->get($path); }
+    public static function template_name() { return self::get("/pagedef/@template"); }
 
     public function make_page($pagedef)
     {
