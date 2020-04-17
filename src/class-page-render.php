@@ -6,9 +6,11 @@ class page_render
 
     protected static $generator = "PAGE_RENDER";
 
-    protected static $pagedef;
-    protected static $template;
-    protected static $settings;
+    public static $pagedef;
+    public static $template;
+    public static $settings;
+    
+    public $page_result;
 
     private static $handlers;
 
@@ -24,12 +26,17 @@ class page_render
 
     public static function pagedef_dom() { if (!self::$pagedef) throw new Exception("No pagedef set."); return self::$pagedef->Doc; }
     public static function template_dom() { if (!self::$template) throw new Exception("No template set."); return self::$template->Doc; }
-    public static function settings_dom() { if (!self::$settings) throw new Exception("Settings DOM not set."); return self::$settings->Doc; }
+    public static function settings_dom($xmlfile = null) { 
+        if ($xmlfile != null) self::$settings = $xmlfile;
+        if (!self::$settings) throw new Exception("Settings DOM not set."); 
+        return self::$settings->Doc; 
+    }
 
     public static function xml_content($xml) { return (new xml_file($xml))->Doc; }
     public static function empty_content() { return self::xml_content("<?xml version='1.0'?><div /"); }
 
     public static function generator_name() { return self::$generator; }
+
 
     protected static function init_handlers()
     {
@@ -41,6 +48,7 @@ class page_render
         $support = array(
             __DIR__ . "/renderers/render_content.php",
             __DIR__ . "/renderers/render_perfect.php",
+            __DIR__ . "/renderers/render_linklist.php",
         );
         foreach($support as $s) {
             require_once($s);
@@ -89,16 +97,17 @@ class page_render
         return $result;
     }
 
-    public static function handle_element($type, $El)
+    public static function handle_element($type, $el)
     {
         if (!isset(self::$handlers[$type])) return null;
         $handlers = self::$handlers[$type];
-        $result = $El;
+        $result = $el;
+        if (is_array($result) && sizeof($result) == 1) $result = $result[0];
         foreach($handlers as $h) {
             $result = call_user_func($h, $result);
             if ($result == null) break;
         }   
-        if ($result == null) return self::empty_content();
+        if ($result == null) $result = self::empty_content();
         return $result;
     }
 
@@ -121,8 +130,8 @@ class page_render
         $template_file = $this->resource_resolver()->resolve_file("template.xml", "template", $template_name);
         php_logger::log("page_render::make_page - template_file=$template_file");
         if ($template_file == null) return null;
-        $this->template = new xml_file($template_file);
-        $result = new xml_file(xml_file::transformXMLXSL_static($pagedef->saveXML(), $this->make_page_xsl(), true));
-        return $result;
+        self::$template = new xml_file($template_file);
+        $this->page_result = new xml_file(xml_file::transformXMLXSL_static($pagedef->saveXML(), $this->make_page_xsl(), true));
+        return $this->page_result;
     }
 }

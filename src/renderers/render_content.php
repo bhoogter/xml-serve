@@ -7,17 +7,16 @@ class render_content extends render_base
         page_render::add_handler("content", get_class()."::render");
     }
 
-    public static function render($El)
+    public static function render($el)
     {
-        $f = xml_file::nodeXmlFile($El[0]);
-        php_logger::log("CALL", $f->saveXML());
-        $id = $f->get("@id");
+        php_logger::log("CALL");
+        $id = $el->getAttribute("id");
+        $src = $el->getAttribute("src");
+        $type = $el->getAttribute("type");
 
-        $src = $f->get("@src");
         if ($src == "") $src = page_render::$template->get("/*/content[@id='$id']/@src");
         if ($src == "") return page_render::empty_content();
 
-        $type = $f->get("@type");
         if ($type == "") $type = page_render::$template->get("/*/content[@id='$id']/@type");
 
         php_logger::log("=========: " . page_render::template_name());
@@ -40,6 +39,6 @@ class render_content extends render_base
                 return page_render::xml_content($res);
         }
 
-        return $f->Doc;
+        return $el;
     }
 }

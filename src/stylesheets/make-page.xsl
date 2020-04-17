@@ -124,70 +124,44 @@
                     <xsl:copy-of select='node()'/>
                 </xsl:for-each>
 
-                <xsl:variable name='gIcon' select='$siteSettings/global/shortcuticon/@icon' />
-                <xsl:variable name='gIconImg' select='$siteSettings/global/shortcuticon/@img' />
+                <xsl:variable name='gIcon' select='$siteSettings/site/global/shortcuticon/@icon' />
+                <xsl:variable name='gIconImg' select='$siteSettings/site/global/shortcuticon/@img' />
 
-                <xsl:choose>
-                    <xsl:when test='string(/shortcuticon/@icon)!=""'>
-                        <link>
-                            <xsl:attribute name='rel'>shortcut icon</xsl:attribute>
-                            <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string(/shortcuticon/@icon))' />
-                            </xsl:attribute>
-                        </link>
-                    </xsl:when>
-                    <xsl:when test='string($pTemplate/*/shortcuticon/@icon)!=""'>
-                        <link>
-                            <xsl:attribute name='rel'>shortcut icon</xsl:attribute>
-                            <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string($Template/*/shortcuticon/@icon))' />
-                            </xsl:attribute>
-                        </link>
-                    </xsl:when>
-                    <xsl:when test='string-length($gIcon)!=0'>
-                        <link>
-                            <xsl:attribute name='rel'>shortcut icon</xsl:attribute>
-                            <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string($gIcon))' />
-                            </xsl:attribute>
-                        </link>
-                    </xsl:when>
-                </xsl:choose>
-                <xsl:choose>
-                    <xsl:when test='/shortcuticon/@img!=""'>
-                        <link>
-                            <xsl:attribute name='rel'>icon</xsl:attribute>
-                            <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string(/shortcuticon/@img))' />
-                            </xsl:attribute>
-                            <xsl:attribute name='type'>
-                                <xsl:value-of select='php:functionString("page_render::image_format",string(/shortcuticon/@img))' />
-                            </xsl:attribute>
-                        </link>
-                    </xsl:when>
-                    <xsl:when test='$pTemplate/*/shortcuticon/@img!=""'>
-                        <link>
-                            <xsl:attribute name='rel'>icon</xsl:attribute>
-                            <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string($Template/*/shortcuticon/@img))' />
-                            </xsl:attribute>
-                            <xsl:attribute name='type'>
-                                <xsl:value-of select='php:functionString("page_render::image_format",string($Template/*/shortcuticon/@img))' />
-                            </xsl:attribute>
-                        </link>
-                    </xsl:when>
-                    <xsl:when test='$gIconImg!=""'>
-                        <link>
-                            <xsl:attribute name='rel'>icon</xsl:attribute>
-                            <xsl:attribute name='href'>
-                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string($PS//global/shortcuticon/@img))' />
-                            </xsl:attribute>
-                            <xsl:attribute name='type'>
-                                <xsl:value-of select='php:functionString("page_render::image_format",string($PS//global/shortcuticon/@img))' />
-                            </xsl:attribute>
-                        </link>
-                    </xsl:when>
-                </xsl:choose>
+                <xsl:variable name='shortcutIcon'>
+                    <xsl:choose>
+                        <xsl:when test='string(/shortcuticon/@icon)!=""'><xsl:value-of select='string(/shortcuticon/@icon)' /></xsl:when>
+                        <xsl:when test='string($pTemplate/*/shortcuticon/@icon)!=""'><xsl:value-of select='string($pTemplate/*/shortcuticon/@icon)' /></xsl:when>
+                        <xsl:when test='string($siteSettings/site/global/shortcuticon/@icon)!=""'><xsl:value-of select='string($siteSettings/site/global/shortcuticon/@icon)' /></xsl:when>
+                        <xsl:otherwise>shortcuticon.ico</xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+
+                <xsl:variable name='shortcutIconFile' select='php:functionString("page_render::resolve_ref", string($shortcutIcon))' />
+                <xsl:if test='string-length(string($shortcutIconFile))!=0'>
+                    <link>
+                        <xsl:attribute name='rel'>shortcut icon</xsl:attribute>
+                        <xsl:attribute name='href'><xsl:value-of select='string($shortcutIconFile)' /></xsl:attribute>
+                    </link>
+                </xsl:if>
+
+                <xsl:variable name='shortcutIconImg'>
+                    <xsl:choose>
+                        <xsl:when test='string(/shortcuticon/@img)!=""'><xsl:value-of select='string(/shortcuticon/@img)' /></xsl:when>
+                        <xsl:when test='string($pTemplate/*/shortcuticon/@img)!=""'><xsl:value-of select='string($pTemplate/*/shortcuticon/@img)' /></xsl:when>
+                        <xsl:when test='string($siteSettings/site/global/shortcuticon/@img)!=""'><xsl:value-of select='string($siteSettings/site/global/shortcuticon/@img)' /></xsl:when>
+                        <xsl:otherwise>shortcuticon.png</xsl:otherwise>
+                    </xsl:choose>
+                </xsl:variable>
+
+                <xsl:variable name='shortcutIconImgFile' select='php:functionString("page_render::resolve_ref", string($shortcutIconImg))' />
+                <xsl:if test='string-length(string($shortcutIconImgFile))!=0'>
+                    <link>
+                        <xsl:attribute name='rel'>icon</xsl:attribute>
+                        <xsl:attribute name='href'><xsl:value-of select='$shortcutIconImgFile' /></xsl:attribute>
+                        <xsl:attribute name='type'><xsl:value-of select='php:functionString("page_render::image_format", string($shortcutIconImgFile))' /></xsl:attribute>
+                    </link>
+                </xsl:if>
+                
             </head>
 
             <body>
