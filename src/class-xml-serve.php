@@ -1,6 +1,6 @@
 <?php
 
-class xml_serve
+class xml_serve extends page_render
 {
     private $pages_source;
     private $resource_folder;
@@ -24,16 +24,16 @@ class xml_serve
         if ($this->pages_source == null) throw new Exception("Missing argument 2: pages source (filename, xml_file)");
 
         if ($n >= 3) {
-            if (is_object($a[2])) page_render::$settings = $a[2];
-            else if (file_exists($l = realpath($a[2]))) page_render::$settings = new xml_file($l);
-            else if (file_exists($l = realpath($this->resource_folder . $a[2]))) page_render::$settings = new xml_file($l);
-            else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) page_render::$settings = new xml_file($l);
+            if (is_object($a[2])) $this->settings = $a[2];
+            else if (file_exists($l = realpath($a[2]))) self::$settings = new xml_file($l);
+            else if (file_exists($l = realpath($this->resource_folder . $a[2]))) self::$settings = new xml_file($l);
+            else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) self::$settings = new xml_file($l);
         }
-        if (page_render::$settings == null) throw new Exception("Missing argument 3: site settings (filename, xml_file)");
+        if (self::$settings == null) throw new Exception("Missing argument 3: site settings (filename, xml_file)");
     }
 
-    function template_folder()     {        return $this->resource_folder;    }
-    function pages_source()    {        return $this->pages_source;    }
+    function template_folder()          {        return $this->resource_folder;    }
+    function pages_source()             {        return $this->pages_source;    }
     function source_part_get($index)    {        return $this->pages_source()->get($index);    }
     function source_part_nde($index)    {        return $this->pages_source()->nde($index);    }
     function source_part_def($index)    {        return $this->pages_source()->def($index);    }

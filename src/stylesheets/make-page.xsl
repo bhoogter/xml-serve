@@ -6,7 +6,7 @@
     <xsl:output method='html' cdata-section-elements="script style pre"/>
     <xsl:preserve-space elements="script style pre"/>
 
-    <xsl:variable name='siteSettings' select='php:functionString("page_render::site_settings_dom")' />
+    <xsl:variable name='siteSettings' select='php:functionString("page_render::settings_dom")' />
     <xsl:variable name='pTemplate' select='php:functionString("page_render::template_dom")' />
     <xsl:variable name='SRC' select='.' />
 
