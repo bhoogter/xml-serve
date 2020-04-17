@@ -34,14 +34,26 @@ class page_render
     protected static function init_handlers()
     {
         if (is_array(self::$handlers)) return;
-        self::include_support();
         self::$handlers = [];
-        self::add_handler("content", "render_content::render");
-    }
 
+        require_once(__DIR__ . "/renderers/render_base.php");
+        php_logger::trace("CALL");
+        $support = array(
+            __DIR__ . "/renderers/render_content.php",
+            __DIR__ . "/renderers/render_perfect.php",
+        );
+        foreach($support as $s) {
+            require_once($s);
+            $class = basename($s, ".php");
+            $target ="$class::init";
+            php_logger::dump("class=$class, target=$target");
+            call_user_func($target);
+        }
+    }
 
     public static function add_handler($type, $handler, $priority = 0)
     {
+        php_logger::debug("CALL ($type, $handler, $priority)");
         self::init_handlers();
         if (!isset(self::$handlers[$type]))
           self::$handlers[$type] = [];
@@ -95,12 +107,6 @@ class page_render
         $filename = __DIR__ . "/stylesheets/make-page.xsl";
         php_logger::debug("filename=$filename", __DIR__, __FILE__);
         return file_get_contents($filename);
-    }
-
-    public static function include_support()
-    {
-        php_logger::trace(__DIR__);
-        require_once(__DIR__ . "/renderers/render_content.php");
     }
 
     public static function get($path) { return self::$pagedef->get($path); }

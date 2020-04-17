@@ -19,5 +19,17 @@ class handlers_test extends TestCase
     {
         $result = self::$subject::handler_list();
         $this->assertTrue(strlen($result) > 0);
+
+        self::$subject::add_handler("one", "handler1");
+        self::$subject::add_handler("one", "handler2");
+        self::$subject::add_handler("one", "handler3");
+        self::$subject::add_handler("one", "handler0", -1);
+        $result = self::$subject::get_handlers("one");
+
+        $this->assertEquals(4, sizeof($result));
+        $this->assertEquals("handler0", $result[-1]);
+        $this->assertEquals("handler1", $result[0]);
+        $this->assertEquals("handler2", $result[1]);
+        $this->assertEquals("handler3", $result[2]);
     }
 }

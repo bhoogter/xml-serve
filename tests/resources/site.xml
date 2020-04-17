@@ -5,5 +5,6 @@
 		<description>This describes the site.</description>
 		<keywords>These are for searching and SEO.</keywords>
         <css src='global.css' />
+        <url src='http://example.com' />
 	</global>
 </site>
