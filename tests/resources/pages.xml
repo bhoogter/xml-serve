@@ -1,16 +1,16 @@
 <?xml version='1.0' ?>
 <pages template='template-main'>
     <pageset template='main'>
-        <pagedef loc='home' default='1' linklists='main'>
+        <pagedef text='Home' loc='home' default='1' linklists='main'>
             <content id='content' src='main-content.html' />
         </pagedef>
-        <pagedef loc='404' default404='1' linklists='main'>
+        <pagedef text='Not Found' loc='404' default404='1'>
             <content id='content' src='404-content.html' />
         </pagedef>
-        <pagedef loc='about' linklists='main'>
+        <pagedef text='About' loc='about' linklists='main'>
             <content id='content' src='about-content.html' />
         </pagedef>
-        <pagedef loc='contact' linklists='main'>
+        <pagedef text='Contact Us' loc='contact' linklists='main'>
             <content id='content' src='contact-content.html' />
         </pagedef>
 
@@ -30,13 +30,13 @@
 
         <pagedef loc='sub3/sub3/sub3' pageset='subset3' />
 
-        <pagedef loc='ext1' href='https://www.google.com' linklists="external"/>
-        <pagedef loc='ext2' href='https://www.yahoo.com' linklists="external" />
-        <pagedef loc='ext3' href='https://www.duckduckgo.com' linklists="external" />
-        <pagedef loc='extsub' href='https://www.subway.com' linklists="external,sub" />
+        <pagedef text='Google' loc='ext1' href='https://www.google.com' linklists="external"/>
+        <pagedef text='Yahoo' loc='ext2' href='https://www.yahoo.com' linklists="external" />
+        <pagedef text='Duck Duck Go' loc='ext3' href='https://www.duckduckgo.com' linklists="external" />
+        <pagedef text='Subway' loc='extsub' href='https://www.subway.com' linklists="external,sub" />
 
-        <pagedef loc='moreglory' href='http://www.moreglory.org/' title='More Glory' linklists='sites' />
-        <pagedef loc='moreglory' href='http://www.churchofthebeyond.com/' title='Church of the Beyond' linklists='sites,main' />
+        <pagedef text='More Glory' loc='moreglory' href='http://www.moreglory.org/' linklists='sites' />
+        <pagedef text='Church of the Beyond' loc='moreglory' href='http://www.churchofthebeyond.com/' linklists='sites,main' />
     </pageset>
 
     <pageset id='subset1' template='template1'>

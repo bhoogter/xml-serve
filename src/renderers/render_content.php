@@ -36,7 +36,8 @@ class render_content extends render_base
                 $xml = xml_file::make_tidy_string($html, "xhtml");
                 return xml_serve::xml_content(Slimdown::render($xml));
             default:
-                return xml_serve::xml_content($res);
+                $cont = file_get_contents($res);
+                return xml_serve::xml_content($cont);
         }
 
         return $el;

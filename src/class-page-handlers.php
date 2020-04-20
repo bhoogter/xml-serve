@@ -4,7 +4,8 @@ class page_handlers
 {
     private static $handlers;
 
-    public static function xml_content($xml) { return (new xml_file($xml))->Doc; }
+    // public static function xml_content($xml) { return (new xml_file($xml))->Doc; }
+    public static function xml_content($xml) { return xml_file::XMLToDoc($xml); }
     public static function empty_content() { return self::xml_content("<?xml version='1.0'?><div /"); }
 
     protected static function init_handlers()
@@ -68,15 +69,24 @@ class page_handlers
 
     public static function handle_element($type, $el)
     {
-        if (!isset(self::$handlers[$type])) return null;
+        php_logger::trace("type=$type");
+        if (!isset(self::$handlers[$type])) {
+            php_logger::trace("Unknown handler: $type");
+            return $el;
+        }
         $handlers = self::$handlers[$type];
         $result = $el;
         if (is_array($result) && sizeof($result) == 1) $result = $result[0];
         foreach ($handlers as $h) {
             $result = call_user_func($h, $result);
-            if ($result == null) break;
+            if ($result == null) {
+                php_logger::trace("Got null in handler.  Returning empty content.");
+                break;
+            }
+            if (get_class($result) == "DOMDocument") $result = $result->documentElement;
         }
         if ($result == null) $result = self::empty_content();
+        php_logger::trace("Returning NON EMPTY for $type");
         return $result;
     }
 }

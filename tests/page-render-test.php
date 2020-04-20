@@ -30,6 +30,7 @@ class page_render_tests extends TestCase
         // php_logger::set_log_level("render_perfect", "all");
         // php_logger::set_log_level("render_linklist", "all");
         // php_logger::set_log_level("xml_serve", "all");
+        // php_logger::set_log_level("page_handlers", "all");
         php_logger::set_log_level("render_linklist", "debug");
         $candidate = $this->candidatePage1();
         $result = xml_serve::make_page($candidate);

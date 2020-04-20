@@ -17,7 +17,7 @@ class render_linklist extends render_base
 
         $xml = '';
         if ($style != '') $xml .= "<$style>";
-        else $xml .= '<div />';
+        else $xml .= '<div>';
 
         $pageset = xml_serve::$template->get("/pagedef/@pageset");
         $request = xml_serve::$template->get("/pagedef/@request");
@@ -30,20 +30,30 @@ class render_linklist extends render_base
         php_logger::dump($links);
         foreach($links as $l) {
             $href = $l->getAttribute("href");
+            
             if ($href != "") $url = $href;
             else {
                 $loc = $l->getAttribute("loc");
                 $url = substr($request, 0, strrpos($request, '/') + 1);
                 $url .= $loc;
             }
+            $text = $l->getAttribute("text");
+            if ($text == '') $text = $url;
             $xml .= "<a ";
             if ($class != '') $xml .= "class='$class' ";
             $xml .= "href='$url' ";
-            $xml .= "/>";
+            $xml .= ">";
+            $xml .= $text;
+            $xml .= "</a>";
         }
         if ($style != '') $xml .= "</" . explode(' ', $style)[0]. ">";
         else $xml .= "</div>";
-        php_logger::dump("\n============= render_linklist: \n", $xml);
-        return xml_serve::xml_content($xml);
+
+        // php_logger::log("\n============= render_linklist: \n");
+        // php_logger::log($xml);
+        // php_logger::log("\n=============\n");
+        $result = xml_serve::xml_content($xml);
+        php_logger::trace($result->saveXML());
+        return $result;
     }
 }

@@ -165,7 +165,7 @@
             </head>
 
             <body>
-                <xsl:for-each select='$pTemplate/*/pagebody/*'>
+                <xsl:for-each select='$pTemplate/*/pagebody/node()'>
                     <xsl:call-template name="bodytemplate"/>
                 </xsl:for-each>
             </body>
@@ -186,7 +186,7 @@
                 <xsl:for-each select='$NodeResult'>
                     <xsl:copy>
                         <xsl:for-each select='@*'><xsl:copy-of select='.' /></xsl:for-each>
-                        <xsl:for-each select='*'>
+                        <xsl:for-each select='node()'>
                             <xsl:call-template name='bodytemplate' />
                         </xsl:for-each>
                     </xsl:copy>
