@@ -8,13 +8,11 @@ class page_render_tests extends TestCase
 {
     public static function setUpBeforeClass(): void
     {
-        resource_resolver::instance()->init(
+        xml_serve::init(
             __DIR__ . "/resources/content",
-            realpath(__DIR__ . "/resources")
+            new page_source(__DIR__ . "/resources/pages.xml"),
+            new xml_file(__DIR__ . "/resources/site.xml")
         );
-
-
-        xml_serve::settings_dom(new xml_file(__DIR__ . "/resources/site.xml"));
     }
 
     public function candidatePage1()
@@ -31,6 +29,8 @@ class page_render_tests extends TestCase
     {
         // php_logger::set_log_level("render_perfect", "all");
         // php_logger::set_log_level("render_linklist", "all");
+        // php_logger::set_log_level("xml_serve", "all");
+        php_logger::set_log_level("render_linklist", "debug");
         $candidate = $this->candidatePage1();
         $result = xml_serve::make_page($candidate);
 

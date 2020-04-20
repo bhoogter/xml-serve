@@ -16,6 +16,7 @@ class xml_serve extends page_handlers
 
     public static function init($resource_folder = '', $pagesrc = null, $sitesettings = null)
     {
+        php_logger::log("CALL");
         if ($resource_folder != '') {
             self::$resource_folder = $resource_folder;
             self::resource_resolver()->init($resource_folder);
