@@ -5,13 +5,13 @@ class render_perfect extends render_base
     public static function init()
     {
         php_logger::log("CALL");
-        page_render::add_handler("a", get_class()."::perfect_a", 50);
-        page_render::add_handler("img", get_class()."::perfect_img");
+        xml_serve::add_handler("a", get_class()."::perfect_a", 50);
+        xml_serve::add_handler("img", get_class()."::perfect_img");
     }
 
     public static function perfect_url($url) 
     {
-        $base_url = page_render::$settings->get("/site/global/url");
+        $base_url = xml_serve::$settings->get("/site/global/url");
         if (substr($url, 0, 1) == '/') $url = $base_url . $url;
         $url = str_replace("//", "/", $url);
         return $url;

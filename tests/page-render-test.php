@@ -12,7 +12,9 @@ class page_render_tests extends TestCase
             __DIR__ . "/resources/content",
             realpath(__DIR__ . "/resources")
         );
-        page_render::settings_dom(new xml_file(__DIR__ . "/resources/site.xml"));
+
+
+        xml_serve::settings_dom(new xml_file(__DIR__ . "/resources/site.xml"));
     }
 
     public function candidatePage1()
@@ -27,9 +29,10 @@ class page_render_tests extends TestCase
 
     public function testDefaultLookup(): void
     {
-        php_logger::set_log_level("render_perfect", "all");
+        // php_logger::set_log_level("render_perfect", "all");
+        // php_logger::set_log_level("render_linklist", "all");
         $candidate = $this->candidatePage1();
-        $result = (new page_render())->make_page($candidate);
+        $result = xml_serve::make_page($candidate);
 
         $xhtml = xml_file::make_tidy_string($result->saveXML(), "xml");
         print "\n---------------------------------\n{$xhtml}\n---------------------------------\n";

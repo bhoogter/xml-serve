@@ -6,16 +6,16 @@
     <xsl:output method='html' cdata-section-elements="script style pre"/>
     <xsl:preserve-space elements="script style pre"/>
 
-    <xsl:variable name='siteSettings' select='php:functionString("page_render::settings_dom")' />
-    <xsl:variable name='pTemplate' select='php:functionString("page_render::template_dom")' />
+    <xsl:variable name='siteSettings' select='php:functionString("xml_serve::settings_dom")' />
+    <xsl:variable name='pTemplate' select='php:functionString("xml_serve::template_dom")' />
     <xsl:variable name='SRC' select='.' />
 
-    <xsl:variable name='HandledElements' select='php:functionString("page_render::handler_list")'/>
+    <xsl:variable name='HandledElements' select='php:functionString("xml_serve::handler_list")'/>
     <xsl:variable name='gTitle' select="$siteSettings/*/global/title" />
     <xsl:variable name='bAppendSiteTitle' select='$siteSettings/*/global/title/@append' />
 
     <xsl:template match='/'>
-        <xsl:variable name='debug_make_page' select='php:functionString("constant", "page_render::DEBUG_MAKE_PAGE")' />
+        <xsl:variable name='debug_make_page' select='php:functionString("constant", "xml_serve::DEBUG_MAKE_PAGE")' />
         <xsl:if test="$debug_make_page != ''">
             <table class='DEBUG' style='border:solid 1px black;'>
                 <tr><td colspan='2' class='title'>make-page.xsl</td></tr>
@@ -39,7 +39,7 @@
 
         <html>
             <head>
-                <xsl:variable name='pageGenerator' select="php:functionString('page_render::generator_name')" />
+                <xsl:variable name='pageGenerator' select="php:functionString('xml_serve::generator_name')" />
                 <meta name="generator" content="{$pageGenerator}" />
                 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
@@ -74,7 +74,7 @@
 -->
                 <xsl:for-each select='$siteSettings/*/global/css | //*/css | $pTemplate/*/css'>
                     <xsl:variable name='location'><xsl:if test='name(..) = "pagetemplate"'>template</xsl:if></xsl:variable>
-                    <xsl:variable name='href' select='php:functionString("page_render::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
+                    <xsl:variable name='href' select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
                     <xsl:if test='string-length($href) != 0'>
                         <link>
                             <xsl:attribute name='rel'>stylesheet</xsl:attribute>
@@ -98,12 +98,12 @@
 -->
                 <xsl:for-each select="$siteSettings/*/global/script | //*/script | $pTemplate/*/script">
                     <xsl:variable name='location'><xsl:if test='name(..) = "pagetemplate"'>template</xsl:if></xsl:variable>
-                    <xsl:variable name='src' select='php:functionString("page_render::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
+                    <xsl:variable name='src' select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
                     <xsl:if test='string-length($src) != 0'>
                         <script>
-                            <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("page_render::script_type", string(@src))'/></xsl:attribute>
+                            <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("xml_serve::script_type", string(@src))'/></xsl:attribute>
                             <xsl:attribute name='src' >
-                                <xsl:value-of select='php:functionString("page_render::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
+                                <xsl:value-of select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
                             </xsl:attribute>
                         </script>
                     </xsl:if>
@@ -136,7 +136,7 @@
                     </xsl:choose>
                 </xsl:variable>
 
-                <xsl:variable name='shortcutIconFile' select='php:functionString("page_render::resolve_ref", string($shortcutIcon))' />
+                <xsl:variable name='shortcutIconFile' select='php:functionString("xml_serve::resolve_ref", string($shortcutIcon))' />
                 <xsl:if test='string-length(string($shortcutIconFile))!=0'>
                     <link>
                         <xsl:attribute name='rel'>shortcut icon</xsl:attribute>
@@ -153,12 +153,12 @@
                     </xsl:choose>
                 </xsl:variable>
 
-                <xsl:variable name='shortcutIconImgFile' select='php:functionString("page_render::resolve_ref", string($shortcutIconImg))' />
+                <xsl:variable name='shortcutIconImgFile' select='php:functionString("xml_serve::resolve_ref", string($shortcutIconImg))' />
                 <xsl:if test='string-length(string($shortcutIconImgFile))!=0'>
                     <link>
                         <xsl:attribute name='rel'>icon</xsl:attribute>
                         <xsl:attribute name='href'><xsl:value-of select='$shortcutIconImgFile' /></xsl:attribute>
-                        <xsl:attribute name='type'><xsl:value-of select='php:functionString("page_render::image_format", string($shortcutIconImgFile))' /></xsl:attribute>
+                        <xsl:attribute name='type'><xsl:value-of select='php:functionString("xml_serve::image_format", string($shortcutIconImgFile))' /></xsl:attribute>
                     </link>
                 </xsl:if>
                 
@@ -181,7 +181,7 @@
 
         <xsl:choose>
             <xsl:when test='$HasNodeHandler'>
-                <xsl:variable name='NodeResult' select='php:function("page_render::handle_element", $N, .)' />
+                <xsl:variable name='NodeResult' select='php:function("xml_serve::handle_element", $N, .)' />
 
                 <xsl:for-each select='$NodeResult'>
                     <xsl:copy>

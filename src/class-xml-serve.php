@@ -1,131 +1,91 @@
 <?php
 
-class xml_serve extends page_render
+class xml_serve extends page_handlers
 {
-    private $pages_source;
-    private $resource_folder;
+    public const DEBUG_MAKE_PAGE = "";
+    public static $generator = "XML_SERVE";
 
-    function __construct()
+    public static $resource_folder;
+
+    public static $pagedef;
+    public static $template;
+    public static $settings;
+    public static $page_source;
+    
+    public static $page_result;
+
+    public static function init($resource_folder = '', $pagesrc = null, $sitesettings = null)
     {
-        $n = func_num_args();
-        $a = func_get_args();
-        if ($n >= 1) {
-            $this->resource_folder = $a[0];
+        if ($resource_folder != '') {
+            self::$resource_folder = $resource_folder;
+            self::resource_resolver()->init($resource_folder);
         } else {
             throw new Exception("Missing argument 1: resource_folder (string path)");
         }
 
-        if ($n >= 2) {
-            if (is_object($a[1])) $this->pages_source = $a[1];
-            else if (file_exists($l = realpath($a[1]))) $this->pages_source = new xml_file($l);
-            else if (file_exists($l = realpath($this->resource_folder . $a[1]))) $this->pages_source = new xml_file($l);
-            else if (file_exists($l = realpath(__DIR__ . "/pages.xml"))) $this->pages_source = new xml_file($l);
+        if ($pagesrc != null) {
+            if (is_object($pagesrc)) self::$page_source = $pagesrc;
+            else if (file_exists($l = realpath($pagesrc))) self::$page_source = new page_source($l);
+            else if (file_exists($l = realpath(self::$resource_folder . $pagesrc))) self::$page_source = new page_source($l);
+            else if (file_exists($l = realpath(__DIR__ . "/pages.xml"))) self::$page_source = new page_source($l);
         }
-        if ($this->pages_source == null) throw new Exception("Missing argument 2: pages source (filename, xml_file)");
+        if (self::$page_source == null) throw new Exception("Missing argument 2: pages source (filename, xml_file)");
 
-        if ($n >= 3) {
-            if (is_object($a[2])) $this->settings = $a[2];
-            else if (file_exists($l = realpath($a[2]))) self::$settings = new xml_file($l);
-            else if (file_exists($l = realpath($this->resource_folder . $a[2]))) self::$settings = new xml_file($l);
+        if ($sitesettings != null) {
+            if (is_object($sitesettings)) self::$settings = $sitesettings;
+            else if (file_exists($l = realpath($sitesettings))) self::$settings = new xml_file($l);
+            else if (file_exists($l = realpath(self::$resource_folder . $sitesettings))) self::$settings = new xml_file($l);
             else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) self::$settings = new xml_file($l);
         }
         if (self::$settings == null) throw new Exception("Missing argument 3: site settings (filename, xml_file)");
     }
 
-    function template_folder()          {        return $this->resource_folder;    }
-    function pages_source()             {        return $this->pages_source;    }
-    function source_part_get($index)    {        return $this->pages_source()->get($index);    }
-    function source_part_nde($index)    {        return $this->pages_source()->nde($index);    }
-    function source_part_def($index)    {        return $this->pages_source()->def($index);    }
-
-    protected function new_pagepart_xml($element, $pageset)
+    public static function resource_resolver($rr = null)
     {
-        php_logger::log("CALL (..., $pageset)");
-        $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
-        // print xml_file::nodeXml($element);
-        $xml = xml_file::nodeXmlFile($element);
-        $xml->set("/pagedef/@pageset", $pageset);
-        if (($template = $this->source_part_get("/pages/pageset[$pageset_check]/@template")) != '')
-            $xml->set("/pagedef/@template", $template);
-        else if (($template = $this->source_part_get("/pages/pageset[@default]/@template")) != '')
-            $xml->set("/pagedef/@template", $template);
-        return $xml;
+        if ($rr != null) resource_resolver::$instance = $rr;
+        return resource_resolver::instance();
     }
 
-    protected function page_part_element($index, &$pageset = "", &$http_result = 200)
-    {
-        php_logger::log("CALL ($index, $pageset)");
-        $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
-        if (substr($index, 0, 1) == '/') $index = substr($index, 1);
-        if (substr($index, -1) == '/') $index = substr($index, 0, strlen($index) - 1);
-        php_logger::log("CALL ($index, $pageset)");
-        if (($this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@loc='$index']"))  != null) {
-            $subpageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@pageset");
-            php_logger::log("exact match $index (pageset=$pageset)");
+    public static function resolve_ref($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) { return self::resource_resolver()->resolve_ref($resource, $types, $mappings, $subfolders); }
+    public static function script_type($filename) { return self::resource_resolver()->script_type($filename); }
+    public static function image_format($fn) { return self::resource_resolver()->image_format($fn); }
 
-            if ($subpageset != null) {
-                $pageset = $subpageset;
-                return $this->page_part_element("", $subpageset);
-            }
-            return $this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@loc='$index']");
-        }
-        $path = $index;
-        $rest = "";
-        while (true) {
-            if ($path == '') break;
-            $x = strrpos($path, '/');
-            if (($x = strrpos($path, '/')) == false) {
-                $rest = "$path/$rest";
-                $path = '';
-            } else {
-                $rest = substr($path, $x + 1) . ($rest == "" ? "" : "/") . $rest;
-                $path = substr($path, 0, $x);
-            }
-            php_logger::log("Searching path tree: path=$path, rest=$rest");
-            php_logger::debug("Searching: /pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
+    public static function template_folder()          {        return self::resource_folder;    }
+    public static function page_source()              {        return self::$page_source;    }
 
-            $subpageset = $this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
-            if ($subpageset != null) {
-                php_logger::trace("subpath pageset $pageset");
-                $pageset = $subpageset;
-                $subset_result = $this->page_part_element($rest, $pageset);
-                if ($subset_result != null) return $subset_result;
-                php_logger::trace("subpath didn't find.  No 404 handler provided.");
-                break;
-            }
-        }
-
-        if ($index == "") {
-            php_logger::debug("CALL  - Checking default on /pages/pageset[$pageset_check]/pagedef[@default]/@loc");
-            if ($this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@default]/@loc") != '') {
-                php_logger::trace("CALL  - default match");
-                return $this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@default]");
-            }
-        } else {
-            php_logger::trace("Checking 404 on /pages/pageset[$pageset_check]/pagedef[@default404]/@loc");
-            if ($this->source_part_get("/pages/pageset[$pageset_check]/pagedef[@default404]/@loc") != '') {
-                php_logger::trace("404 match");
-                $http_result = 404;
-                return $this->source_part_nde("/pages/pageset[$pageset_check]/pagedef[@default404]");
-            }
-        }
-
-        $http_result = 404;
-        php_logger::log("NO MATCH");
-        return null;
+    public static function pagedef_dom() { if (!self::$pagedef) throw new Exception("No pagedef set."); return self::$pagedef->Doc; }
+    public static function template_dom() { if (!self::$template) throw new Exception("No template set."); return self::$template->Doc; }
+    public static function settings_dom($xmlfile = null) { 
+        if ($xmlfile != null) self::$settings = $xmlfile;
+        if (!self::$settings) throw new Exception("Settings DOM not set."); 
+        return self::$settings->Doc; 
     }
 
-    function page_part($index, &$http_result = 200)
+    public static function template_name() { return self::$pagedef->get("/pagedef/@template"); }
+    public static function generator_name() { return self::$generator; }
+
+    public static function make_page_xsl()
     {
-        php_logger::log("CALL ($index)");
-        $pageset = "";
-        $element = $this->page_part_element($index, $pageset, $http_result);
-        php_logger::debug("pageset=$pageset, http_result=$http_result");
-        if ($element == null) return null;
-        return $this->new_pagepart_xml($element, $pageset);
+        $filename = __DIR__ . "/stylesheets/make-page.xsl";
+        php_logger::debug("filename=$filename", __DIR__, __FILE__);
+        return file_get_contents($filename);
+    }    
+
+    public function make_page($pagedef)
+    {
+        php_logger::log("page_render::make_page()");
+        self::$pagedef = $pagedef;
+        $template_name = self::$pagedef->get("/pagedef/@template");
+        php_logger::log("page_render::make_page - template_name=$template_name");
+        $template_file = self::resource_resolver()->resolve_file("template.xml", "template", $template_name);
+        php_logger::log("page_render::make_page - template_file=$template_file");
+        if ($template_file == null) return null;
+        self::$template = new xml_file($template_file);
+        self::$page_result = new xml_file(xml_file::transformXMLXSL_static($pagedef->saveXML(), self::make_page_xsl(), true));
+        return self::$page_result;
     }
 
-    function parse_special($pagedef, $http_result = 200)
+    public static function parse_special($pagedef, $http_result = 200)
     {
         php_logger::log("CALL (..., $http_result)", $pagedef);
         http_response_code($http_result);
@@ -143,14 +103,14 @@ class xml_serve extends page_render
         }
     }
 
-    function get_page($index)
+    public static function get_page($index)
     {
         php_logger::log("CALL ($index)");
         $http_result = 200;
-        $pagedef = $this->page_part($index, $http_result);
+        self::$pagedef = self::$page_source->page_part($index, $http_result);
         php_logger::debug("HTTP RESULT: $http_result");
-        $this->parse_special($pagedef, $http_result);
-        $page = page_render::make_page($pagedef);
+        self::parse_special(self::$pagedef, $http_result);
+        $page = self::make_page(self::$pagedef);
         $result = xml_file::make_tidy_string($page->saveXML());
         return $result;
     }
