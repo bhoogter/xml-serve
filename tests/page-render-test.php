@@ -31,7 +31,7 @@ class page_render_tests extends TestCase
         // php_logger::set_log_level("render_linklist", "all");
         // php_logger::set_log_level("xml_serve", "all");
         // php_logger::set_log_level("page_handlers", "all");
-        php_logger::set_log_level("render_linklist", "debug");
+        // php_logger::set_log_level("render_linklist", "debug");
         $candidate = $this->candidatePage1();
         $result = xml_serve::make_page($candidate);
 
@@ -44,5 +44,17 @@ class page_render_tests extends TestCase
         $this->assertTrue(strpos($xhtml, 'a,b,c') !== false);
         $this->assertTrue(strpos($xhtml, 'Main Page - ') !== false);
         $this->assertTrue(strpos($xhtml, 'a new page') !== false);
+    }
+
+
+    public function testDefaultLookupLinkLists(): void
+    {
+        $candidate = $this->candidatePage1();
+        $page = xml_serve::make_page($candidate);
+        $result = xml_file::make_tidy_string($page->saveXML(), "xml");
+
+        $this->assertTrue(strpos($result, "google") !== false);
+        $this->assertTrue(strpos($result, "Church of the Beyond") !== false);
+        $this->assertTrue(strpos($result, "<a href=\"contact\">Contact Us</a>") !== false);
     }
 }

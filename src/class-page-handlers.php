@@ -5,8 +5,10 @@ class page_handlers
     private static $handlers;
 
     // public static function xml_content($xml) { return (new xml_file($xml))->Doc; }
-    public static function xml_content($xml) { return xml_file::XMLToDoc($xml); }
-    public static function empty_content() { return self::xml_content("<?xml version='1.0'?><div /"); }
+    public static function xml_content($xml)
+    {        return xml_file::XMLToDoc($xml);    }
+    public static function empty_content()
+    {        return self::xml_content("<?xml version='1.0'?><div />");    }
 
     protected static function init_handlers()
     {
@@ -27,6 +29,11 @@ class page_handlers
             php_logger::dump("class=$class, target=$target");
             call_user_func($target);
         }
+    }
+
+    public static function reset_handlers() 
+    {
+        self::$handlers = null;
     }
 
     public static function add_handler($type, $handler, $priority = 0)
@@ -56,8 +63,23 @@ class page_handlers
     public static function remove_handler($type, $idx)
     {
         self::init_handlers();
-        if (isset(self::$handlers[$type][$idx]))
-            unset(self::$handlers[$type][$idx]);
+        if (!isset(self::$handlers[$type])) return false;
+
+        if (is_integer($idx)) {
+            if (isset(self::$handlers[$type][$idx])) {
+                unset(self::$handlers[$type][$idx]);
+                return true;
+            }
+        } else if (is_string($idx)) {
+            foreach (self::$handlers[$type] as $k => $v) {
+                if ($v == $idx) {
+                    unset(self::$handlers[$type][$k]);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public static function handler_list()
