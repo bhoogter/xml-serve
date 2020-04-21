@@ -15,7 +15,7 @@ class render_content extends render_base
         $type = $el->getAttribute("type");
 
         if ($src == "") $src = xml_serve::$template->get("/*/content[@id='$id']/@src");
-        if ($src == "") return xml_serve::empty_content();
+        if ($src == "") $src = "$id.html";
 
         if ($type == "") $type = xml_serve::$template->get("/*/content[@id='$id']/@type");
 
