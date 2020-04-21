@@ -31,8 +31,8 @@ class render_perfect extends render_base
         $target = $el->getAttribute("target");
         $onclick = $el->getAttribute("onMouseDown");
         if ($target != '' && $onclick == '') {
-            $el.setAttribute('onMouseDown', 'target=\'$target\'');
-            $el.removeAttribute('target');
+            $el->setAttribute('onMouseDown', 'target=\'$target\'');
+            $el->removeAttribute('target');
         }
         return $el;
     }

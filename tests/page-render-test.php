@@ -18,7 +18,7 @@ class page_render_tests extends TestCase
     public function candidatePage1()
     {
         $xml = "";
-        $xml .= "<pagedef loc='sub1home' default='1' template='main' title='Main Page' description='a new page' keywords='a,b,c'>\n";
+        $xml .= "<pagedef loc='sub1home' default='1' template='main' text='Main Page' description='a new page' keywords='a,b,c'>\n";
         $xml .= "  <content id='content' src='main-content.html' />\n";
         $xml .= "</pagedef>";
 
@@ -32,6 +32,7 @@ class page_render_tests extends TestCase
         // php_logger::set_log_level("xml_serve", "all");
         // php_logger::set_log_level("page_handlers", "all");
         // php_logger::set_log_level("render_linklist", "debug");
+        // php_logger::set_log_level("render_content", "debug");
         $candidate = $this->candidatePage1();
         $result = xml_serve::make_page($candidate);
 
@@ -42,7 +43,7 @@ class page_render_tests extends TestCase
         $this->assertTrue(strpos($xhtml, '/content/templates/main/style.css') !== false);
         $this->assertTrue(strpos($xhtml, '/content/templates/main/color.css') !== false);
         $this->assertTrue(strpos($xhtml, 'a,b,c') !== false);
-        $this->assertTrue(strpos($xhtml, 'Main Page - ') !== false);
+        $this->assertTrue(strpos($xhtml, 'Main Page') !== false);
         $this->assertTrue(strpos($xhtml, 'a new page') !== false);
     }
 
