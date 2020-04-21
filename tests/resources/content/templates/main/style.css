@@ -170,6 +170,16 @@ ul
     padding: 0 00px 0 20px;
 }
 
+#nav * li
+{
+    float: left;
+    list-style-type: none;
+    font-family: 'Arial';
+    font-size: 14px;
+    font-weight: bold;
+    padding-right: 20px;
+}
+
 /* main container */
 #main
 { 
@@ -281,7 +291,6 @@ ul#g-nav-main li a
   margin: 5px auto 0px auto;
   overflow: hidden;
   border-style: none;
-  clear: both;
 }
 
 #footer a{text-decoration: none;}

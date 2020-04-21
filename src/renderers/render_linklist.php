@@ -11,13 +11,21 @@ class render_linklist extends render_base
     public static function render($el) 
     {
         $id = $el->getAttribute("id");
+
         $class = $el->getAttribute("class");
-        $style = $el->getAttribute("style");
-        php_logger::log("CALL id=$id, class=$class style=$style");
+        $item_class = $el->getAttribute("item-class");
+
+        $type = $el->getAttribute("type");
+        if ($type == '') $type = 'ul';
+        $item_type = $el->getAttribute("item-type");
+        if ($item_type == '' && ($type=='ul' || $type == 'ol')) $item_type = 'li';
+
+        $type_key = explode(' ', $type)[0];
+        $item_type_key = $item_type == '' ? '' : explode(' ', $item_type)[0];
+        php_logger::log("CALL id=$id,  type=$type, class=$class, type_key=$type_key, item-type=$item_type, item_class=$item_class");
 
         $xml = '';
-        if ($style != '') $xml .= "<$style>";
-        else $xml .= '<div>';
+        $xml .= "<$type" . ($class==""?"":" class='$class'>") . ">";
 
         $pageset = xml_serve::$template->get("/pagedef/@pageset");
         $request = xml_serve::$template->get("/pagedef/@request");
@@ -39,15 +47,21 @@ class render_linklist extends render_base
             }
             $text = $l->getAttribute("text");
             if ($text == '') $text = $url;
-            $xml .= "<a ";
-            if ($class != '') $xml .= "class='$class' ";
-            $xml .= "href='$url' ";
-            $xml .= ">";
-            $xml .= $text;
-            $xml .= "</a>";
+
+            $link = '';
+            $link .= "<a ";
+            if ($item_class != '') $link .= "class='$class' ";
+            $link .= "href='$url' ";
+            $link .= ">";
+            $link .= $text;
+            $link .= "</a>";
+
+            if ($item_type_key != '') $xml .= "<$item_type" . ($item_class==""?"":" class='$item_class'") . ">";
+            $xml .= $link;
+            if ($item_type_key != '') $xml .= "</$item_type_key>";
         }
-        if ($style != '') $xml .= "</" . explode(' ', $style)[0]. ">";
-        else $xml .= "</div>";
+        
+        $xml .= "</" . $type_key . ">";
 
         // php_logger::log("\n============= render_linklist: \n");
         // php_logger::log($xml);

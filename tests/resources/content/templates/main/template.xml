@@ -15,7 +15,7 @@
     <images src='images/'/>
 
     <pagebody>
-        <div id="main" style='width: 800px; align: center; border: solid 1px black;'>
+        <div id="main">
             <header>
                 <content id='logo' />
                 <nav>
