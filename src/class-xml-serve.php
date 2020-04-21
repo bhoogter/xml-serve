@@ -34,11 +34,11 @@ class xml_serve extends page_handlers
 
         if ($sitesettings != null) {
             if (is_object($sitesettings)) self::$settings = $sitesettings;
-            else if (file_exists($l = realpath($sitesettings))) self::$settings = new xml_file($l);
-            else if (file_exists($l = realpath(self::$resource_folder . $sitesettings))) self::$settings = new xml_file($l);
-            else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) self::$settings = new xml_file($l);
+            else if (file_exists($l = realpath($sitesettings))) self::$settings = new site_settings($l);
+            else if (file_exists($l = realpath(self::$resource_folder . $sitesettings))) self::$settings = new site_settings($l);
+            else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) self::$settings = new site_settings($l);
         }
-        if (self::$settings == null) throw new Exception("Missing argument 3: site settings (filename, xml_file)");
+        if (self::$settings == null) throw new Exception("Missing argument 3: site settings (filename, site_settings)");
     }
 
     public static function resource_resolver($rr = null)

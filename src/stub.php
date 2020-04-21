@@ -7,8 +7,9 @@ dependency_manager("source", null, __DIR__ . "/phars/");
 spl_autoload_register(function ($name) {
     $d = (strpos(__FILE__, ".phar") === false ? __DIR__ : "phar://" . __FILE__ . "/src");
     if ($name == "xml_serve") require_once($d . "/class-xml-serve.php");
-    if ($name == "page_source") require_once($d . "/class-page-source.php");
     if ($name == "page_handlers") require_once($d . "/class-page-handlers.php");
+    if ($name == "page_source") require_once($d . "/class-page-source.php");
+    if ($name == "site_settings") require_once($d . "/class-page-source.php");
 });
 
 __HALT_COMPILER();
