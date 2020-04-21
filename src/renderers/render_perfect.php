@@ -25,7 +25,7 @@ class render_perfect extends render_base
 
     public static function perfect_a($el) {
         php_logger::log("CALL", $el);
-        print $el->tagName;
+        
         $href = $el->getAttribute("href");
         if ($href) $el->setAttribute("href", self::perfect_url($href));
         $target = $el->getAttribute("target");
@@ -40,6 +40,7 @@ class render_perfect extends render_base
     public static function perfect_img($el)
     {
         php_logger::log("CALL", $el);
+        
         $src = $el->getAttribute("src");
         $src = self::match_url($src);
         $src = self::perfect_url($src);

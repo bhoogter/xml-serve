@@ -21,7 +21,7 @@ class render_content extends render_base
 
         php_logger::log("=========: " . xml_serve::template_name());
         $res = xml_serve::resource_resolver()->resolve_file($src, "templates", xml_serve::template_name());
-        if ($type == "") $type = substr($userfile_name, strrpos($userfile_name, '.')+1);
+        if ($type == "") $type = substr($res, strrpos($res, '.')+1);
         switch (strtolower($type)) {
             case 'text':
             case 'txt':

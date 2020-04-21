@@ -32,7 +32,7 @@
         <xsl:variable name='pBody' select='$pTemplate//pagebody' />
 
         <xsl:variable name='pTitle'>
-            <xsl:value-of select='$SRC/pagedef/@title' />
+            <xsl:value-of select='$SRC/pagedef/@text' />
             <xsl:if test='$pTemplate/*/title!=""'> - <xsl:value-of select='$pTemplate/*/title' /></xsl:if>
             <xsl:if test='$SRC/pagedef/@title!="" and $bAppendSiteTitle!="" and $gTitle!=""'> - <xsl:value-of select='$gTitle' /></xsl:if>
         </xsl:variable>
