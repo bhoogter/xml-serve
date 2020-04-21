@@ -14,17 +14,14 @@
     <css src='global-for-template.css'/>
     <images src='images/'/>
 
-    <content id="logo" type="html" src="logo.html" />
-    <content id="links" type="html" src="links.html" />
-    <content id="sidebar" type="html" src="sidebar.html" />
-    <content id="footer" type="html" src="footer.html" />
-
     <pagebody>
         <div id="main" style='width: 800px; align: center; border: solid 1px black;'>
-            <content id='logo'>
-                <img src='logo-*'/>
-            </content>
-            <content id='links'/>
+            <header>
+                <content id='logo' />
+                <nav>
+                    <content id='links'/>
+                </nav>
+            </header>
             <div id='site_content'>
                 <div id='sidebar'>
                     <content id='sidebar' />

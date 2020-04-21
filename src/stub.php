@@ -9,7 +9,7 @@ spl_autoload_register(function ($name) {
     if ($name == "xml_serve") require_once($d . "/class-xml-serve.php");
     if ($name == "page_handlers") require_once($d . "/class-page-handlers.php");
     if ($name == "page_source") require_once($d . "/class-page-source.php");
-    if ($name == "site_settings") require_once($d . "/class-page-source.php");
+    if ($name == "site_settings") require_once($d . "/class-site-settings.php");
 });
 
 __HALT_COMPILER();

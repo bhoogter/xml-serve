@@ -14,15 +14,13 @@ class xml_serve extends page_handlers
     
     public static $page_result;
 
-    public static function init($resource_folder = '', $pagesrc = null, $sitesettings = null)
+    public static function init($resource_folder = '', $http_root = '', $pagesrc = null, $sitesettings = null)
     {
         php_logger::log("CALL");
-        if ($resource_folder != '') {
-            self::$resource_folder = $resource_folder;
-            self::resource_resolver()->init($resource_folder);
-        } else {
-            throw new Exception("Missing argument 1: resource_folder (string path)");
-        }
+        if ($resource_folder != '') self::$resource_folder = $resource_folder;
+        else throw new Exception("Missing argument 1: resource_folder (string path)");
+        if ($http_root == '') $http_root = $resource_folder;
+        self::resource_resolver()->init(realpath($resource_folder), realpath($http_root));
 
         if ($pagesrc != null) {
             if (is_object($pagesrc)) self::$page_source = $pagesrc;
@@ -30,7 +28,7 @@ class xml_serve extends page_handlers
             else if (file_exists($l = realpath(self::$resource_folder . $pagesrc))) self::$page_source = new page_source($l);
             else if (file_exists($l = realpath(__DIR__ . "/pages.xml"))) self::$page_source = new page_source($l);
         }
-        if (self::$page_source == null) throw new Exception("Missing argument 2: pages source (filename, xml_file)");
+        if (self::$page_source == null) throw new Exception("Missing argument 3: pages source (filename, xml_file)");
 
         if ($sitesettings != null) {
             if (is_object($sitesettings)) self::$settings = $sitesettings;
@@ -38,7 +36,7 @@ class xml_serve extends page_handlers
             else if (file_exists($l = realpath(self::$resource_folder . $sitesettings))) self::$settings = new site_settings($l);
             else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) self::$settings = new site_settings($l);
         }
-        if (self::$settings == null) throw new Exception("Missing argument 3: site settings (filename, site_settings)");
+        if (self::$settings == null) throw new Exception("Missing argument 4: site settings (filename, site_settings)");
     }
 
     public static function resource_resolver($rr = null)

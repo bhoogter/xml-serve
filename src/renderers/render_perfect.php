@@ -5,8 +5,8 @@ class render_perfect extends render_base
     public static function init()
     {
         php_logger::log("CALL");
-        xml_serve::add_handler("a", get_class()."::perfect_a", 50);
-        xml_serve::add_handler("img", get_class()."::perfect_img");
+        xml_serve::add_handler("a", get_class()."::perfect_a", 100);
+        xml_serve::add_handler("img", get_class()."::perfect_img", 100);
     }
 
     public static function perfect_url($url) 

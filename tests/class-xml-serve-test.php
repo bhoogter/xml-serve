@@ -11,19 +11,23 @@ class pages_test extends TestCase
 
     public function testCreatePagesClass(): void
     {
-        $obj = new xml_serve(__DIR__ . '/resources', self::PAGES_XML, self::SITE_XML);
-        $this->assertNotNull($obj);
+        xml_serve::init(
+            __DIR__ . '/resources/content', 
+            __DIR__, 
+            self::PAGES_XML, 
+            self::SITE_XML
+        );
+        $this->assertNotNull(xml_serve::$page_source);
     }
 
     public function testCreatePagesClassWithFile(): void
     {
-        $obj = new xml_serve(__DIR__ . '/resources', self::PAGES_XML, self::SITE_XML);
-        $this->assertNotNull($obj);
-    }
-
-    public function testCreatePagesClassWithXmlFileObject(): void
-    {
-        $xmlobj = new xml_serve(__DIR__ . '/resources', self::PAGES_XML, self::SITE_XML);
-        $this->assertNotNull($xmlobj);
+        xml_serve::init(
+            __DIR__ . '/resources/content', 
+            __DIR__, 
+            new page_source(self::PAGES_XML), 
+            new site_settings(self::SITE_XML)
+        );
+        $this->assertNotNull(xml_serve::$page_source);
     }
 }

@@ -10,8 +10,9 @@ class page_render_tests extends TestCase
     {
         xml_serve::init(
             __DIR__ . "/resources/content",
-            new page_source(__DIR__ . "/resources/pages.xml"),
-            new xml_file(__DIR__ . "/resources/site.xml")
+            __DIR__,
+            __DIR__ . "/resources/pages.xml",
+            __DIR__ . "/resources/site.xml"
         );
     }
 

@@ -109,6 +109,7 @@ ul
 
 #site_content
 { 
+    float: left;
     width: 980px;
     overflow: hidden;
     margin: 0 auto 0 auto;
@@ -128,7 +129,8 @@ ul
 }
 
 #sidebar ul
-{ width: 228px; 
+{ 
+    width: 228px; 
   padding: 4px 0 0 0; 
   margin: 4px 0 30px 0;}
 
@@ -145,25 +147,27 @@ ul
 { color: #444;} 
 
 #content
-{ float: left;
-  text-align: left;
-  font-family: tahoma;
-  font-size: 14px;
-  width: 633px;
-  margin: 0px 0px 0px 0px;
-  padding: 0 20px 0 20px;
+{ 
+    float: left;
+    text-align: left;
+    font-family: tahoma;
+    font-size: 14px;
+    width: 633px;
+    margin: 0px 0px 0px 0px;
+    padding: 0 20px 0 20px;
 }
 
 #pic-right
-{ float: left;
-  text-align: left;
-  font-family: tahoma;
-  font-size: 14px;
-  width: 10px;
-  height: 10px;
-  background-color: black;
-  margin: 0px 0px 0px 0px;
-  padding: 0 00px 0 20px;
+{ 
+    float: left;
+    text-align: left;
+    font-family: tahoma;
+    font-size: 14px;
+    width: 10px;
+    height: 10px;
+    background-color: black;
+    margin: 0px 0px 0px 0px;
+    padding: 0 00px 0 20px;
 }
 
 /* main container */
@@ -177,13 +181,14 @@ ul
 
 /* links above the logo */
 #links
-{ background: url(images/links.png) repeat;
-  margin: 5px auto 0 auto;
-  padding: 17px 0px 6px 0px;
-  width: 980px;
-  text-align: center;
-  height: 27px;
-  border: 0px solid;
+{ 
+    background: url(images/links.png) repeat;
+    margin: 5px auto 0 auto;
+    padding: 17px 0px 6px 0px;
+    width: 980px;
+    text-align: center;
+    height: 27px;
+    border: 0px solid;
 }
 
 #links a

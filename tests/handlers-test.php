@@ -12,7 +12,8 @@ class handlers_test extends TestCase
 	public static function setUpBeforeClass(): void
 	{
 		xml_serve::init(
-            __DIR__ . "/resources", 
+            __DIR__ . "/resources/content", 
+            __DIR__, 
             self::PAGES_XML, 
             self::SITE_XML
         );

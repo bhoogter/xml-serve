@@ -97,6 +97,7 @@ class page_handlers
             return $el;
         }
         $handlers = self::$handlers[$type];
+        ksort($handlers);
         $result = $el;
         if (is_array($result) && sizeof($result) == 1) $result = $result[0];
         foreach ($handlers as $h) {
