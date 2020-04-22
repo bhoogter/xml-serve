@@ -6,6 +6,7 @@ require_once(__DIR__ . "/load.php");
 php_logger::clear_log_levels('warning');
 // php_logger::set_log_level('resource_resolver', 'trace');
 // php_logger::set_log_level('render_content', 'trace');
+php_logger::set_log_level('render_perfect', 'trace');
 
 // print "<!DOCTYPE html>\n";
 print '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">' . "\n";
