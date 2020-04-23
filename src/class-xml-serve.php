@@ -46,6 +46,7 @@ class xml_serve extends page_handlers
     }
 
     public static function resolve_files($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) { return self::resource_resolver()->resolve_files($resource, $types, $mappings, $subfolders); }
+    public static function resolve_refs($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) { return self::resource_resolver()->resolve_refs($resource, $types, $mappings, $subfolders); }
     public static function resolve_file($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) { return self::resource_resolver()->resolve_file($resource, $types, $mappings, $subfolders); }
     public static function resolve_ref($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) { return self::resource_resolver()->resolve_ref($resource, $types, $mappings, $subfolders); }
     public static function script_type($filename) { return self::resource_resolver()->script_type($filename); }

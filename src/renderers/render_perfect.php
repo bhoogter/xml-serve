@@ -22,12 +22,12 @@ class render_perfect extends render_base
         php_logger::log("url=$url");
         if (strpos($url, '*') !== false || strpos($url, '?') !== false) {
             php_logger::debug("Has Token");
-            $test = substr($url, 0, 1) != '/' ? $url : xml_serve::resource_resolver()->http_root . $url;
-            php_logger::debug("test=$test");
-            $files = xml_serve::resolve_files($test, "templates", xml_serve::template_name());
+            php_logger::debug("test=$url");
+            $files = xml_serve::resolve_refs($url, "templates", xml_serve::template_name());
             php_logger::dump($files);
             if (sizeof($files) > 0) {
                 $result = $files[array_rand($files)];
+                $result = str_replace(xml_serve::$resource_folder, '', $result);
                 php_logger::trace("Modified: result=$result");
                 return $result;
             }
