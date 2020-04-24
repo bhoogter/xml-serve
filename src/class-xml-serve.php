@@ -78,7 +78,7 @@ class xml_serve extends page_handlers
         return file_get_contents($filename);
     }    
 
-    public function make_page($pagedef)
+    public static function make_page($pagedef)
     {
         self::$pagedef = $pagedef;
         php_logger::log("CALL", self::$pagedef);
