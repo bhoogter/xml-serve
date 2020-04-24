@@ -19,7 +19,7 @@ class handlers_test extends TestCase
         );
     }
     
-    public function setUp() 
+    public function setUp(): void
     {
         xml_serve::reset_handlers();
     }
