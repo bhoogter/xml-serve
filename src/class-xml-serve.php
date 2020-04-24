@@ -75,14 +75,17 @@ class xml_serve extends page_handlers
 
     public function make_page($pagedef)
     {
-        php_logger::log("page_render::make_page()");
         self::$pagedef = $pagedef;
+        php_logger::log("CALL", self::$pagedef);
+        php_logger::dump("PAGEDEF: ",self::$pagedef->saveXML());
         $template_name = self::$pagedef->get("/pagedef/@template");
-        php_logger::log("page_render::make_page - template_name=$template_name");
+        php_logger::log("template_name=$template_name");
         $template_file = self::resource_resolver()->resolve_file("template.xml", "template", $template_name);
-        php_logger::log("page_render::make_page - template_file=$template_file");
+        php_logger::log("template_file=$template_file");
         if ($template_file == null) return null;
         self::$template = new xml_file($template_file);
+        php_logger::dump("TEMPLATE", self::$template->saveXML());
+
         self::$page_result = new xml_file(xml_file::transformXMLXSL_static($pagedef->saveXML(), self::make_page_xsl(), true));
         return self::$page_result;
     }
@@ -109,11 +112,12 @@ class xml_serve extends page_handlers
     {
         php_logger::log("CALL ($index)");
         $http_result = 200;
-        self::$pagedef = self::$page_source->page_part($index, $http_result);
-        php_logger::debug("HTTP RESULT: $http_result");
-        self::parse_special(self::$pagedef, $http_result);
-        $page = self::make_page(self::$pagedef);
-        $result = xml_file::make_tidy_string($page->saveXML());
-        return $result;
+        $pagedef = self::$page_source->page_part($index, $http_result);
+        php_logger::debug("HTTP RESULT: $http_result", "pagedef=".$pagedef->saveXML());
+        self::parse_special($pagedef, $http_result);
+        $page = self::make_page($pagedef);
+        self::$page_result = xml_file::make_tidy_string($page->saveXML());
+        php_logger::debug("page result len=".strlen(self::$page_result));
+        return self::$page_result;
     }
 }

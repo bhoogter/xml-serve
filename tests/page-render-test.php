@@ -28,6 +28,8 @@ class page_render_tests extends TestCase
 
     public function testDefaultLookup(): void
     {
+        // php_logger::set_log_level("xml_serve", "all");
+        // php_logger::set_log_level("page_source", "all");
         // php_logger::set_log_level("render_perfect", "all");
         // php_logger::set_log_level("render_linklist", "all");
         // php_logger::set_log_level("xml_serve", "all");
@@ -51,6 +53,7 @@ class page_render_tests extends TestCase
 
     public function testDefaultLookupLinkLists(): void
     {
+        // php_logger::set_log_level("xml_serve", "all");
         $candidate = $this->candidatePage1();
         $page = xml_serve::make_page($candidate);
         $result = xml_file::make_tidy_string($page->saveXML(), "xml");

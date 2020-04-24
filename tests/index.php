@@ -4,6 +4,8 @@ $x = microtime(true);
 require_once(__DIR__ . "/load.php");
 
 php_logger::clear_log_levels('warning');
+// php_logger::set_log_level('page_source', 'all');
+// php_logger::set_log_level('xml_serve', 'all');
 // php_logger::set_log_level('resource_resolver', 'trace');
 // php_logger::set_log_level('render_content', 'trace');
 // php_logger::set_log_level('render_perfect', 'trace');

@@ -11,6 +11,7 @@ class render_perfect extends render_base
 
     public static function perfect_url($url) 
     {
+        if (substr($url, 0, 4) == "http") return $url;
         $base_url = xml_serve::$settings->get("/site/global/url");
         if (substr($url, 0, 1) == '/') $url = $base_url . '/' . $url;
         $url = str_replace("//", "/", $url);
@@ -38,7 +39,7 @@ class render_perfect extends render_base
     }
 
     public static function perfect_a($el) {
-        php_logger::log("CALL", $el);
+        php_logger::log("CALL", $el, xml_file::nodeXml($el));
         
         $href = $el->getAttribute("href");
         if ($href) $el->setAttribute("href", self::perfect_url($href));

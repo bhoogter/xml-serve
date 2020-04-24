@@ -10,6 +10,7 @@ class page_source extends xml_file
         $xml = xml_file::nodeXmlFile($element);
         $xml->set("/pagedef/@pageset", $pageset);
         $xml->set("/pagedef/@request", $request);
+        php_logger::dump($xml->saveXML());
 
         if (($template = $this->get("/pages/pageset[$pageset_check]/@template")) != '')
             $xml->set("/pagedef/@template", $template);
@@ -30,10 +31,16 @@ class page_source extends xml_file
             php_logger::log("exact match $index (pageset=$pageset)");
 
             if ($subpageset != null) {
+                php_logger::log("matched subset default");
                 $pageset = $subpageset;
                 return $this->page_part_element("", $subpageset);
             }
-            return $this->nde("/pages/pageset[$pageset_check]/pagedef[@loc='$index']");
+
+            $match = "/pages/pageset[$pageset_check]/pagedef[@loc='$index']";
+            $result = $this->nde($match);
+            php_logger::debug("Returning match for: $match");
+            php_logger::dump("\n", xml_file::nodeXml($result));
+            return $result;
         }
         $path = $index;
         $rest = "";
@@ -88,6 +95,8 @@ class page_source extends xml_file
         $element = $this->page_part_element($index, $pageset, $http_result);
         php_logger::debug("pageset=$pageset, http_result=$http_result");
         if ($element == null) return null;
-        return $this->new_pagepart_xml($element, $pageset, $index);
+        $result = $this->new_pagepart_xml($element, $pageset, $index);
+        php_logger::dump($result->saveXML());
+        return $result;
     }
 }

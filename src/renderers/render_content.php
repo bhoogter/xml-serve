@@ -11,13 +11,29 @@ class render_content extends render_base
     {
         php_logger::log("CALL");
         $id = $el->getAttribute("id");
-        $src = $el->getAttribute("src");
-        $type = $el->getAttribute("type");
+        if (!$id) $id = 'content';
 
-        if ($src == "") $src = xml_serve::$template->get("/*/content[@id='$id']/@src");
+        if (xml_serve::$pagedef) {
+            $src = xml_serve::$pagedef->get("/pagedef/content[@id='$id']/@src");
+            $type = xml_serve::$pagedef->get("/pagedef/content[@id='$id']/@type");
+        }
+
+        if ($src == '' && xml_serve::$template) {
+            $src = xml_serve::$template->get("/pagetemplate/content[@id='$id']/@src");
+            $type = xml_serve::$template->get("/pagetemplate/content[@id='$id']/@type");
+        }
+
+        if ($src == '') {
+            $src = xml_serve::$settings->get("/site/content[@id='$id']/@src");
+            $type = xml_serve::$settings->get("/site/content[@id='$id']/@type");
+        }
+
+        if ($src == '') {
+            $src = $el->getAttribute("src");
+            $type = $el->getAttribute("type");
+        }
+
         if ($src == "") $src = "$id.html";
-
-        if ($type == "") $type = xml_serve::$template->get("/*/content[@id='$id']/@type");
         if ($type == "") $type = substr($src, strrpos($src, '.') + 1);
         php_logger::debug("id=$id", "src=$src", "type=$type");
 
