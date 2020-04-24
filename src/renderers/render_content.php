@@ -34,7 +34,7 @@ class render_content extends render_base
         }
 
         if ($src == "") $src = "$id.html";
-        if ($type == "") $type = substr($src, strrpos($src, '.') + 1);
+        if ($type == "") $type = strrpos($src, '.') === false ? '' : substr($src, strrpos($src, '.') + 1);
         php_logger::debug("id=$id", "src=$src", "type=$type");
 
         $res = xml_serve::resource_resolver()->resolve_file($src, "template", xml_serve::template_name());

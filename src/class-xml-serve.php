@@ -16,6 +16,9 @@ class xml_serve extends page_handlers
 
     public static function init($resource_folder = '', $http_root = '', $pagesrc = null, $sitesettings = null)
     {
+        $resource_folder = realpath($resource_folder);
+        $http_root = realpath($http_root);
+
         php_logger::log("CALL");
         if ($resource_folder != '') self::$resource_folder = $resource_folder;
         else throw new Exception("Missing argument 1: resource_folder (string path)");
@@ -37,6 +40,8 @@ class xml_serve extends page_handlers
             else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) self::$settings = new site_settings($l);
         }
         if (self::$settings == null) throw new Exception("Missing argument 4: site settings (filename, site_settings)");
+
+        self::init_handlers();
     }
 
     public static function resource_resolver($rr = null)

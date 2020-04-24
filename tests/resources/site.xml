@@ -6,6 +6,6 @@
 		<keywords>These are for searching and SEO.</keywords>
         <shortcuticon img='favicon.png' />
         <css src='global.css' />
-        <url src='http://example.com' />
+        <url src='http://localhost' />
 	</global>
 </site>

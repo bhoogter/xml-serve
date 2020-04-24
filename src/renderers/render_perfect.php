@@ -11,10 +11,16 @@ class render_perfect extends render_base
 
     public static function perfect_url($url) 
     {
-        if (substr($url, 0, 4) == "http") return $url;
-        $base_url = xml_serve::$settings->get("/site/global/url");
-        if (substr($url, 0, 1) == '/') $url = $base_url . '/' . $url;
+        php_logger::log("CALL $url");
+        if (substr($url, 0, 4) == "http") {
+            php_logger::debug("absolute path returned");
+            return $url;
+        }
+        $base_url = xml_serve::$settings->get("/site/global/url/@src");
+        if (substr($base_url, -1) != '/') $base_url .= "/";
+        php_logger::debug("base_url=$base_url");
         $url = str_replace("//", "/", $url);
+        if (substr($url, 0, 1) == '/' && $base_url != '') $url = $base_url . substr($url, 1);
         return $url;
     }
 
