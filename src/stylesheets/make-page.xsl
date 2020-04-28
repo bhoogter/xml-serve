@@ -158,7 +158,7 @@
                     <link>
                         <xsl:attribute name='rel'>icon</xsl:attribute>
                         <xsl:attribute name='href'><xsl:value-of select='$shortcutIconImgFile' /></xsl:attribute>
-                        <xsl:attribute name='type'><xsl:value-of select='php:functionString("xml_serve::image_format", string($shortcutIconImgFile))' /></xsl:attribute>
+                        <xsl:attribute name='type'><xsl:value-of select='php:functionString("xml_serve::content_type", string($shortcutIconImgFile))' /></xsl:attribute>
                     </link>
                 </xsl:if>
                 

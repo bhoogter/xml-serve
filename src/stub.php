@@ -10,6 +10,7 @@ spl_autoload_register(function ($name) {
     if ($name == "page_handlers") require_once($d . "/class-page-handlers.php");
     if ($name == "page_source") require_once($d . "/class-page-source.php");
     if ($name == "site_settings") require_once($d . "/class-site-settings.php");
+    if ($name == "xml_serve_extensions") require_once($d . "/class-extensions.php");
 });
 
 __HALT_COMPILER();
