@@ -85,8 +85,17 @@ class xml_serve extends page_handlers
         $template_name = self::$pagedef->get("/pagedef/@template");
         php_logger::log("template_name=$template_name");
         $template_file = self::resource_resolver()->resolve_file("template.xml", "template", $template_name);
+        if ($template_file == null) {
+            $defaulttemplate = self::$settings->get("/site/global/defaulttemplate");
+            $template_file = self::resource_resolver()->resolve_file("template.xml", "template", $defaulttemplate);
+            if (!$template_file) {
+                $msg = "Unable to find template.  template=$template_name, defaulttemplate=$defaulttemplate";
+                php_logger::error($msg);
+                throw new Exception($msg);
+            }
+            self::$pagedef->set("/pagedef/@template", $defaulttemplate);
+        }
         php_logger::log("template_file=$template_file");
-        if ($template_file == null) return null;
         self::$template = new xml_file($template_file);
         php_logger::dump("TEMPLATE", self::$template->saveXML());
 
