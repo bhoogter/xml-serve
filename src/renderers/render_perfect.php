@@ -28,10 +28,8 @@ class render_perfect extends render_base
     {
         php_logger::log("url=$url");
         if (strpos($url, '*') !== false || strpos($url, '?') !== false) {
-            php_logger::debug("Has Token");
-            php_logger::debug("test=$url");
-            $files = xml_serve::resolve_refs($url, "templates", xml_serve::template_name());
-            php_logger::dump($files);
+            php_logger::log("Has Token: url=$url, template name=" .  xml_serve::template_name());
+            $files = xml_serve::resolve_refs($url, "template", xml_serve::template_name());
             if (sizeof($files) > 0) {
                 $result = $files[array_rand($files)];
                 $result = str_replace(xml_serve::$resource_folder, '', $result);

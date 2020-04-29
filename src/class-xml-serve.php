@@ -86,6 +86,7 @@ class xml_serve extends page_handlers
         php_logger::log("template_name=$template_name");
         $template_file = self::resource_resolver()->resolve_file("template.xml", "template", $template_name);
         if ($template_file == null) {
+            php_logger::info("Specified template [$template_name] not found.  Trying default...");
             $defaulttemplate = self::$settings->get("/site/global/defaulttemplate");
             $template_file = self::resource_resolver()->resolve_file("template.xml", "template", $defaulttemplate);
             if (!$template_file) {
@@ -123,6 +124,9 @@ class xml_serve extends page_handlers
 
     public static function get_page($index)
     {
+        // php_logger::set_log_level(get_class(), "all");
+        // php_logger::set_log_level("render_content", "all");
+        // php_logger::set_log_level("resource_resolver", "all");
         php_logger::log("CALL ($index)");
         $http_result = 200;
         $pagedef = self::$page_source->page_part($index, $http_result);

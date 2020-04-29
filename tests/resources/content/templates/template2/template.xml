@@ -1,15 +1,14 @@
 <?xml version='1.0' encoding='ISO-8859-1'?>
 
-<pagetemplate name='Forest'>
-    <uri>http://www.google.com/</uri>
-    <version>1.1</version>
-    <description>A new forest-green template</description>
-    <author>Verde</author>
-    <author-uri>http://www.blazingglory.org</author-uri>
-    <tags>green, three-column</tags>
-    <preview>green-screen.jpg</preview>
+<pagetemplate name='Test Template 2'>
+    <uri>http://www.benjaminhoogterp.com/</uri>
+    <version>1.4</version>
+    <description>A blue theme</description>
+    <author>Blue</author>
+    <author-uri>http://www.benjaminhoogterp.com/</author-uri>
+    <tags>blue, two-column</tags>
+    <preview>screen.jpg</preview>
 
-    <css src='color.css'/>
     <css src='style.css'/>
     <css src='global-for-template.css'/>
     <images src='images/'/>
@@ -23,7 +22,7 @@
             <main>
                 <div id='site_content'>
                     <aside><div id='sidebar'><content id='sidebar' /></div></aside>
-                    <div id='content'><content id='content' /></div>
+                    <article><div id='content'><content id='content' /></div></article>
                 </div>
             </main>
             <footer id='footer'>
