@@ -22,6 +22,8 @@ class page_source extends xml_file
     protected function page_part_element($index, &$pageset = "", &$http_result = 200)
     {
         php_logger::log("CALL ($index, $pageset)");
+        $extension_handler = null;
+
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
         if (substr($index, 0, 1) == '/') $index = substr($index, 1);
         if (substr($index, -1) == '/') $index = substr($index, 0, strlen($index) - 1);
@@ -66,6 +68,12 @@ class page_source extends xml_file
                 php_logger::trace("subpath didn't find.  No 404 handler provided.");
                 break;
             }
+        }
+
+        $extension_check = $this->get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@extension");
+        if ($extension_check) {
+            php_logger::trace("extension handler on path [$path]: $extension_check");
+            return $this->nde("/pages/pageset[$pageset_check]/pagedef[@loc='$path']");
         }
 
         if ($index == "") {

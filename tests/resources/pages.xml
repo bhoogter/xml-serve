@@ -37,6 +37,9 @@
 
         <pagedef text='More Glory' loc='moreglory' href='http://www.moreglory.org/' linklists='sites' />
         <pagedef text='Church of the Beyond' loc='moreglory' href='http://www.churchofthebeyond.com/' linklists='sites,main' />
+
+        <pagedef text='Blog #1' loc='blog' extension='simple-blog' linklists="blogs" />
+        <pagedef text='Blog #2' loc='blog2' extension='simple-blog' linklists="blogs" />
     </pageset>
 
     <pageset id='subset1' template='template1'>

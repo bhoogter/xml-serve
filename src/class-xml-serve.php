@@ -11,10 +11,11 @@ class xml_serve extends page_handlers
     public static $template;
     public static $settings;
     public static $page_source;
+    public static $extension_source;
     
     public static $page_result;
 
-    public static function init($resource_folder = '', $http_root = '', $pagesrc = null, $sitesettings = null)
+    public static function init($resource_folder = '', $http_root = '', $pagesrc = null, $sitesettings = null, $extension_source = null)
     {
         $resource_folder = realpath($resource_folder);
         $http_root = realpath($http_root);
@@ -24,6 +25,8 @@ class xml_serve extends page_handlers
         else throw new Exception("Missing argument 1: resource_folder (string path)");
         if ($http_root == '') $http_root = $resource_folder;
         self::resource_resolver()->init(realpath($resource_folder), realpath($http_root));
+
+        self::init_handlers();
 
         if ($pagesrc != null) {
             if (is_object($pagesrc)) self::$page_source = $pagesrc;
@@ -41,7 +44,13 @@ class xml_serve extends page_handlers
         }
         if (self::$settings == null) throw new Exception("Missing argument 4: site settings (filename, site_settings)");
 
-        self::init_handlers();
+        if ($extension_source != null) {
+            if (is_object($extension_source)) self::$extension_source = $extension_source;
+            else if (file_exists($l = realpath($extension_source))) self::$extension_source = new site_settings($l);
+            else if (file_exists($l = realpath(self::$resource_folder . $extension_source))) self::$extension_source = new site_settings($l);
+            else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) self::$extension_source = new site_settings($l);
+        }
+        if (self::$settings == null) throw new Exception("Missing argument 4: site settings (filename, site_settings)");
     }
 
     public static function resource_resolver($rr = null)
@@ -119,6 +128,13 @@ class xml_serve extends page_handlers
             $type = $pagedef->get("/@redirect-type");
             if ($type == '') $type = 301;
             die(header("Location: $url", TRUE, $type));
+        }
+        if (($ext = $pagedef->get("/@extension"))) {
+            $result = $this->call_extension_handler($ext, "page");
+            if ($result != null) {
+                $pagedef = xml_file::toXmlFile($result);
+                return;
+            }
         }
     }
 
