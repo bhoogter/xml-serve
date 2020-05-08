@@ -6,17 +6,23 @@ use PHPUnit\Framework\TestCase;
 
 class page_lookup extends TestCase
 {
+	private const SITE_XML = __DIR__ . "/resources/site.xml";
 	private const PAGES_XML = __DIR__ . "/resources/pages.xml";
-	protected static $subject = null;
+	protected static     $subject = null;
 
 	public static function setUpBeforeClass(): void
 	{
-		self::$subject = new page_source(self::PAGES_XML);
+        xml_serve::init(
+            __DIR__ . '/resources/content', 
+            __DIR__, 
+            self::PAGES_XML, 
+            self::SITE_XML
+        );
 	}
 
 	public function lookupPageId($path)
 	{
-		return self::$subject->page_part($path)->get("/pagedef/@loc");
+		return xml_serve::page_part($path)->get("/pagedef/@loc");
 	}
 
 	public function testDefaultLookup(): void

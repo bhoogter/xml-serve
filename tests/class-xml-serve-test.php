@@ -25,8 +25,8 @@ class pages_test extends TestCase
         xml_serve::init(
             __DIR__ . '/resources/content', 
             __DIR__, 
-            new page_source(self::PAGES_XML), 
-            new site_settings(self::SITE_XML)
+            new xml_file(self::PAGES_XML), 
+            new xml_file(self::SITE_XML)
         );
         $this->assertNotNull(xml_serve::$page_source);
     }

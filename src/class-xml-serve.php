@@ -251,7 +251,7 @@ class xml_serve extends page_handlers
         // php_logger::set_log_level("resource_resolver", "all");
         php_logger::log("CALL ($index)");
         $http_result = 200;
-        $pagedef = self::$page_source->page_part($index, $http_result);
+        $pagedef = self::page_part($index, $http_result);
         php_logger::debug("HTTP RESULT: $http_result", "pagedef=".$pagedef->saveXML());
         self::parse_special($pagedef, $http_result);
         $page = self::make_page($pagedef);
