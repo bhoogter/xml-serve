@@ -32,7 +32,7 @@ class xml_serve_extensions
         return @$handlers[$type];
     }
 
-    public function call_extension_handler($loc, $path, $name, $type)
+    public static function call_extension_handler($loc, $path, $name, $type)
     {
         $handler = self::get_extension_handler($name, $type);
         if (!$handler) return null;

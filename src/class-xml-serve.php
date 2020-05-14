@@ -236,7 +236,7 @@ class xml_serve extends page_handlers
             die(header("Location: $url", TRUE, $type));
         }
         if (($ext = $pagedef->get("/@extension"))) {
-            $result = $this->call_extension_handler($ext, "page");
+            $result = xml_serve_extensions::call_extension_handler($ext, "page");
             if ($result != null) {
                 $pagedef = xml_file::toXmlFile($result);
                 return;
