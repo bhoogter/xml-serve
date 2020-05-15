@@ -86,7 +86,7 @@ class path_handlers_test extends TestCase
         $this->assertEquals('789', $args['contactId']);
     }
 
-    public function handler($args, $method, $pattern) {
+    public static function handler($args, $method, $pattern) {
         self::$t1 = $args;
         self::$t2 = $method;
         self::$t3 = $pattern;
