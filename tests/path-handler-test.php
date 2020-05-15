@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-class page_path_handlers extends TestCase
+class path_handlers_test extends TestCase
 {
     private static $s = "/api/v1/resource/{contactId}/color";
     private static $t = "/api/v1/resource/12345/color";
@@ -96,7 +96,7 @@ class page_path_handlers extends TestCase
     public function testServeExtension(): void {
         // php_logger::clear_log_levels('trace');
         xml_path_handlers::clear();
-        xml_path_handlers::add(self::$s, 'GET', 'page_render_tests::handler');
+        xml_path_handlers::add(self::$s, 'GET', 'path_handlers_tests::handler');
         xml_serve::get_page("/api/v1/resource/12345/color");
 
         $this->assertEquals(1, count(self::$t1));
