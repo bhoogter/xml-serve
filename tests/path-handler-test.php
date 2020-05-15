@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-class page_render_tests extends TestCase
+class page_path_handlers extends TestCase
 {
     private static $s = "/api/v1/resource/{contactId}/color";
     private static $t = "/api/v1/resource/12345/color";
