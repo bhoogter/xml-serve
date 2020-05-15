@@ -50,7 +50,6 @@ class xml_serve extends page_handlers
             else if (file_exists($l = realpath(self::$resource_folder . $extension_source))) self::$extension_source = new site_settings($l);
             else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) self::$extension_source = new site_settings($l);
         }
-        if (self::$settings == null) throw new Exception("Missing argument 4: site settings (filename, site_settings)");
     }
 
     public static function resource_resolver($rr = null)
@@ -65,7 +64,7 @@ class xml_serve extends page_handlers
     public static function resolve_ref($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) { return self::resource_resolver()->resolve_ref($resource, $types, $mappings, $subfolders); }
     public static function content_type($filename) { return self::resource_resolver()->content_type($filename); }
 
-    public static function template_folder()          {        return self::resource_folder;    }
+    public static function template_folder()          {        return self::$resource_folder;    }
     public static function page_source()              {        return self::$page_source;    }
 
     public static function pagedef_dom() { if (!self::$pagedef) throw new Exception("No pagedef set."); return self::$pagedef->Doc; }
@@ -81,7 +80,7 @@ class xml_serve extends page_handlers
 
     protected static function new_pagepart_xml($element, $pageset, $request)
     {
-        php_logger::log("CALL (..., $pageset)");
+        php_logger::call();
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
         // print xml_file::nodeXml($element);
         $xml = xml_file::nodeXmlFile($element);
@@ -98,7 +97,7 @@ class xml_serve extends page_handlers
 
     protected static function page_part_element($index, &$pageset = "", &$http_result = 200)
     {
-        php_logger::log("CALL ($index, $pageset)");
+        php_logger::call();
         $extension_handler = null;
 
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
@@ -175,7 +174,7 @@ class xml_serve extends page_handlers
 
     public static function page_part($index, &$http_result = 200)
     {
-        php_logger::log("CALL ($index)");
+        php_logger::call();
         $pageset = "";
         $element = self::page_part_element($index, $pageset, $http_result);
         php_logger::debug("pageset=$pageset, http_result=$http_result");
@@ -194,8 +193,8 @@ class xml_serve extends page_handlers
 
     public static function make_page($pagedef)
     {
+        php_logger::call();
         self::$pagedef = $pagedef;
-        php_logger::log("CALL", self::$pagedef);
         php_logger::dump("PAGEDEF: ",self::$pagedef->saveXML());
         $template_name = self::$pagedef->get("/pagedef/@template");
         php_logger::log("template_name=$template_name");
@@ -219,9 +218,9 @@ class xml_serve extends page_handlers
         return self::$page_result;
     }
 
-    public static function parse_special($pagedef, $http_result = 200)
+    public static function parse_special($index, $pagedef, $http_result = 200)
     {
-        php_logger::log("CALL (..., $http_result)", $pagedef);
+        php_logger::call();
         http_response_code($http_result);
         // 301 Moved Permanently, 302 Found, 303 See Other, 307 Temporary Redirect
         if ($pagedef == null) {
@@ -238,25 +237,38 @@ class xml_serve extends page_handlers
         if (($ext = $pagedef->get("/@extension"))) {
             $result = xml_serve_extensions::call_extension_handler($ext, "page");
             if ($result != null) {
-                $pagedef = xml_file::toXmlFile($result);
+                self::$pagedef = xml_file::toXmlFile($result);
                 return;
             }
         }
     }
 
-    public static function get_page($index)
+    public static function get_page($index, $method = 'GET')
     {
         // php_logger::set_log_level(get_class(), "all");
         // php_logger::set_log_level("render_content", "all");
         // php_logger::set_log_level("resource_resolver", "all");
-        php_logger::log("CALL ($index)");
+        php_logger::call();
         $http_result = 200;
         $pagedef = self::page_part($index, $http_result);
         php_logger::debug("HTTP RESULT: $http_result", "pagedef=".$pagedef->saveXML());
-        self::parse_special($pagedef, $http_result);
+      
+        if ($http_result == 404) {
+            $args = [];
+            $pattern = '';
+            $handler = xml_path_handlers::match_handler($index, $method, $args, $pattern);
+            php_logger::debug("handler=$handler");
+            if ($handler != null) {
+                php_logger::info("Calling handler: $handler");
+                if (!is_callable($handler)) throw new Exception("Handler [$handler] is not callable.");
+                return call_user_func($handler, $args, $method, $pattern);
+            }
+        }
+
+        self::parse_special($index, $pagedef, $http_result);
         $page = self::make_page($pagedef);
         self::$page_result = xml_file::make_tidy_string($page->saveXML());
-        php_logger::debug("page result len=".strlen(self::$page_result));
+        php_logger::debug("Page Result len=".strlen(self::$page_result));
         return self::$page_result;
     }
 }

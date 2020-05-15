@@ -11,6 +11,7 @@ spl_autoload_register(function ($name) {
     if ($name == "xml_serve") require_once($d . "/class-xml-serve.php");
     if ($name == "page_handlers") require_once($d . "/class-page-handlers.php");
     if ($name == "xml_serve_extensions") require_once($d . "/class-extensions.php");
+    if ($name == "xml_path_handlers") require_once($d . "/class-path-handlers.php");
 });
 
 __HALT_COMPILER();
