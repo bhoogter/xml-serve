@@ -7,7 +7,6 @@ class xml_serve_extensions
     public static function init_extensions()
     {
         if (!is_array(self::$extensions)) self::$extensions = [];
-        if (!is_array(self::$path_extensions)) self::$path_extensions = [];
     }
 
     public static function extenion_list()
@@ -19,7 +18,7 @@ class xml_serve_extensions
         self::$extensions[$name] = $handlers;
     }
 
-    public static function remove_extension($name, $handlers) 
+    public static function remove_extension($name) 
     {
         self::init_extensions();
         unset(self::$extensions[$name]);
