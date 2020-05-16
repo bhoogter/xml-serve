@@ -270,7 +270,7 @@ class xml_serve extends page_handlers
         $page = self::make_page($pagedef);
         self::$page_result = xml_file::make_tidy_string($page->saveXML());
         php_logger::debug("Page Result len=".strlen(self::$page_result));
-        if (self::$doc_type != '') self::$page_result = self::$doc_type . '\n' . self::$page_result;
+        if (self::$doc_type != '') self::$page_result = self::$doc_type . "\n" . self::$page_result;
         return self::$page_result;
     }
 }
