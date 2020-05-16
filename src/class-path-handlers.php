@@ -107,10 +107,4 @@ class xml_path_handlers
         $pattern = null;
         return null;
     }
-
-    public static function matchPathVars($handler) {
-
-
-
-    }
 }
