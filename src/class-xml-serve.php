@@ -13,6 +13,7 @@ class xml_serve extends page_handlers
     public static $page_source;
     public static $extension_source;
     
+    public static $doc_type;
     public static $page_result;
 
     public static function init($resource_folder = '', $http_root = '', $pagesrc = null, $sitesettings = null, $extension_source = null)
@@ -269,6 +270,7 @@ class xml_serve extends page_handlers
         $page = self::make_page($pagedef);
         self::$page_result = xml_file::make_tidy_string($page->saveXML());
         php_logger::debug("Page Result len=".strlen(self::$page_result));
+        if (self::$doc_type != '') self::$page_result = self::$doc_type . '\n' . self::$page_result;
         return self::$page_result;
     }
 }
