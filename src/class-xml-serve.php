@@ -222,6 +222,10 @@ class xml_serve extends page_handlers
         return self::$page_result;
     }
 
+    public static function redirect($url, $type = 301) {
+        die(header("Location: $url", TRUE, $type));
+    }
+
     public static function parse_special($index, $pagedef, $http_result = 200)
     {
         php_logger::call();
@@ -236,7 +240,7 @@ class xml_serve extends page_handlers
         if (($url = $pagedef->get("/@redirect")) != '') {
             $type = $pagedef->get("/@redirect-type");
             if ($type == '') $type = 301;
-            die(header("Location: $url", TRUE, $type));
+            self::redirect($url, $type);
         }
         if (($ext = $pagedef->get("/@extension"))) {
             $result = xml_serve_extensions::call_extension_handler($ext, "page");
