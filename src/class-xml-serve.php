@@ -12,6 +12,9 @@ class xml_serve extends page_handlers
     public static $settings;
     public static $page_source;
     public static $extension_source;
+
+    public static $method = null;    
+    public static $url_path = null;    
     
     public static $doc_type;
     public static $page_result;
@@ -244,12 +247,15 @@ class xml_serve extends page_handlers
         }
     }
 
-    public static function get_page($index, $method = 'GET')
+    public static function get_page($index = null, $method = null)
     {
-        // php_logger::set_log_level(get_class(), "all");
-        // php_logger::set_log_level("render_content", "all");
-        // php_logger::set_log_level("resource_resolver", "all");
+        if ($index == null) $index = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+        if ($method == null) $method = $_SERVER['REQUEST_METHOD'];
         php_logger::call();
+
+        self::$method = $method;
+        self::$url_path = $index;
+
         $http_result = 200;
         $pagedef = self::page_part($index, $http_result);
         php_logger::debug("HTTP RESULT: $http_result", "pagedef=".$pagedef->saveXML());
