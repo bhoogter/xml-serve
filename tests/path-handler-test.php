@@ -97,7 +97,7 @@ class path_handlers_test extends TestCase
         // php_logger::clear_log_levels('trace');
         xml_path_handlers::clear();
         xml_path_handlers::add(self::$s, 'GET', 'path_handlers_test::handler');
-        xml_serve::get_page("/api/v1/resource/12345/color");
+        xml_serve::get_page("/api/v1/resource/12345/color", "GET");
 
         $this->assertEquals(1, count(self::$t1));
         $this->assertEquals("12345", self::$t1['contactId']);
