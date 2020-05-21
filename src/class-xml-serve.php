@@ -10,6 +10,11 @@ class xml_serve extends page_handlers
     public static $pagedef;
     public static $template;
     public static $settings;
+
+    public static $additional_css = [];
+    public static $additional_rss = [];
+    public static $additional_scripts = [];
+
     public static $page_source;
     public static $extension_source;
 
@@ -78,6 +83,18 @@ class xml_serve extends page_handlers
         if (!self::$settings) throw new Exception("Settings DOM not set."); 
         return self::$settings->Doc; 
     }
+
+    private static function additional_item_list($list, $itemtype) {
+        if (!is_array($list)) $list = [];
+        $s  = "<list>";
+        foreach($list as $l) $s .= "<item $itemtype='$l' />";
+        $s .= "</list>";
+        return self::xml_content($s);
+    }
+
+    public static function get_additional_css() { return self::additional_item_list(self::$additional_css, 'src'); }
+    public static function get_additional_rss() { return self::additional_item_list(self::$additional_rss, 'src'); }
+    public static function get_additional_script() { return self::additional_item_list(self::$additional_scripts, 'src'); }
 
     public static function template_name() { return self::$pagedef->get("/pagedef/@template"); }
     public static function generator_name() { return self::$generator; }

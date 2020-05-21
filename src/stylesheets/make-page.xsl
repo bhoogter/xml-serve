@@ -14,6 +14,10 @@
     <xsl:variable name='gTitle' select="$siteSettings/*/global/title" />
     <xsl:variable name='bAppendSiteTitle' select='$siteSettings/*/global/title/@append' />
 
+    <xsl:variable name='addCss' select='php:function("xml_serve::get_additional_css")' />
+    <xsl:variable name='addRss' select='php:function("xml_serve::get_additional_rss")' />
+    <xsl:variable name='addScript' select='php:function("xml_serve::get_additional_script")' />
+
     <xsl:template match='/'>
         <xsl:variable name='debug_make_page' select='php:functionString("constant", "xml_serve::DEBUG_MAKE_PAGE")' />
         <xsl:if test="$debug_make_page != ''">
@@ -69,11 +73,8 @@
                 </xsl:if>
 
                 <title><xsl:value-of select='$pTitle' /></title>
-<!--
-			<xsl:variable name='systemStyles' select="php:function('juniper_get_styles')" />
-			<xsl:for-each select="$systemStyles/*/link"><xsl:copy-of select='.'/></xsl:for-each>
--->
-                <xsl:for-each select='$siteSettings/*/global/css | //*/css | $pTemplate/*/css'>
+   
+                <xsl:for-each select='$siteSettings/*/global/css | //*/css | $pTemplate/*/css | $addCss/*/item'>
                     <xsl:variable name='location'><xsl:if test='name(..) = "pagetemplate"'>template</xsl:if></xsl:variable>
                     <xsl:variable name='href' select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
                     <xsl:if test='string-length($href) != 0'>
@@ -85,7 +86,7 @@
                     </xsl:if>
                 </xsl:for-each>
 
-                <xsl:for-each select='$siteSettings/*/global/rss | $pTemplate/*/rss | //*/rss'>
+                <xsl:for-each select='$siteSettings/*/global/rss | $pTemplate/*/rss | //*/rss | $addRss/*/item'>
                     <link>
                         <xsl:attribute name='rel'>alternate</xsl:attribute>
                         <xsl:attribute name='type'>application/rss+xml</xsl:attribute>
@@ -93,16 +94,12 @@
                     </link>
                 </xsl:for-each>
 
-<!--
-			<xsl:variable name='systemScripts' select="php:function('juniper_get_scripts')" />
-			<xsl:for-each select="$systemScripts/*/script"><xsl:copy-of select='.'/></xsl:for-each>
--->
-                <xsl:for-each select="$siteSettings/*/global/script | //*/script | $pTemplate/*/script">
+                <xsl:for-each select="$siteSettings/*/global/script | //*/script | $pTemplate/*/script | $addScript/*/item">
                     <xsl:variable name='location'><xsl:if test='name(..) = "pagetemplate"'>template</xsl:if></xsl:variable>
                     <xsl:variable name='src' select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
                     <xsl:if test='string-length($src) != 0'>
                         <script>
-                            <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("xml_serve::script_type", string(@src))'/></xsl:attribute>
+                            <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("xml_serve::content_type", string(@src))'/></xsl:attribute>
                             <xsl:attribute name='src' >
                                 <xsl:value-of select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
                             </xsl:attribute>
