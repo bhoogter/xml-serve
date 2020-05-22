@@ -99,7 +99,7 @@
                     <xsl:variable name='src' select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
                     <xsl:if test='string-length($src) != 0'>
                         <script>
-                            <xsl:attribute name='type'>text/<xsl:value-of select='php:functionString("xml_serve::file_content_type", string(@src))'/></xsl:attribute>
+                            <xsl:attribute name='type'><xsl:value-of select='php:functionString("xml_serve::file_content_type", string(@src))'/></xsl:attribute>
                             <xsl:attribute name='src' >
                                 <xsl:value-of select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
                             </xsl:attribute>
