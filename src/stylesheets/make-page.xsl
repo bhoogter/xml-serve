@@ -103,6 +103,7 @@
                             <xsl:attribute name='src' >
                                 <xsl:value-of select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
                             </xsl:attribute>
+                            &nbsp;
                         </script>
                     </xsl:if>
                 </xsl:for-each>
