@@ -76,7 +76,7 @@
    
                 <xsl:for-each select='$siteSettings/*/global/css | //*/css | $pTemplate/*/css | $addCss/*/item'>
                     <xsl:variable name='location'><xsl:if test='name(..) = "pagetemplate"'>template</xsl:if></xsl:variable>
-                    <xsl:variable name='href' select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
+                    <xsl:variable name='href' select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template), "css")' />
                     <xsl:if test='string-length($href) != 0'>
                         <link>
                             <xsl:attribute name='rel'>stylesheet</xsl:attribute>
@@ -96,13 +96,11 @@
 
                 <xsl:for-each select="$siteSettings/*/global/script | //*/script | $pTemplate/*/script | $addScript/*/item">
                     <xsl:variable name='location'><xsl:if test='name(..) = "pagetemplate"'>template</xsl:if></xsl:variable>
-                    <xsl:variable name='src' select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
+                    <xsl:variable name='src' select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template), "js")' />
                     <xsl:if test='string-length($src) != 0'>
                         <script>
-                            <xsl:attribute name='type'><xsl:value-of select='php:functionString("xml_serve::file_content_type", string(@src))'/></xsl:attribute>
-                            <xsl:attribute name='src' >
-                                <xsl:value-of select='php:functionString("xml_serve::resolve_ref", string(@src), string($location), string($SRC/pagedef/@template))' />
-                            </xsl:attribute>
+                            <xsl:attribute name='type'><xsl:value-of select='php:functionString("xml_serve::file_content_type", string($src))'/></xsl:attribute>
+                            <xsl:attribute name='src' ><xsl:value-of select='$src' /></xsl:attribute>
                             &nbsp;
                         </script>
                     </xsl:if>

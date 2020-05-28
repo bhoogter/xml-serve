@@ -67,10 +67,10 @@ class xml_serve extends page_handlers
         return resource_resolver::instance();
     }
 
-    public static function resolve_files($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) { return self::resource_resolver()->resolve_files($resource, $types, $mappings, $subfolders); }
-    public static function resolve_refs($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) { return self::resource_resolver()->resolve_refs($resource, $types, $mappings, $subfolders); }
-    public static function resolve_file($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) { return self::resource_resolver()->resolve_file($resource, $types, $mappings, $subfolders); }
-    public static function resolve_ref($resource, $types = [], $mappings = [], $subfolders = ['.', '*']) { return self::resource_resolver()->resolve_ref($resource, $types, $mappings, $subfolders); }
+    public static function resolve_files($resource, $types = [], $mappings = [], $subfolders = []) { return self::resource_resolver()->resolve_files($resource, $types, $mappings, $subfolders); }
+    public static function resolve_refs($resource, $types = [], $mappings = [], $subfolders = []) { return self::resource_resolver()->resolve_refs($resource, $types, $mappings, $subfolders); }
+    public static function resolve_file($resource, $types = [], $mappings = [], $subfolders = []) { return self::resource_resolver()->resolve_file($resource, $types, $mappings, $subfolders); }
+    public static function resolve_ref($resource, $types = [], $mappings = [], $subfolders = []) { return self::resource_resolver()->resolve_ref($resource, $types, $mappings, $subfolders); }
     public static function content_type($filename) { return self::resource_resolver()->content_type($filename); }
     public static function file_content_type($filename) { return self::content_type(pathinfo($filename, PATHINFO_EXTENSION)); }
 

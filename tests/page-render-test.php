@@ -42,6 +42,8 @@ class page_render_tests extends TestCase
         $xhtml = xml_file::make_tidy_string($result->saveXML(), "xml");
         print "\n---------------------------------\n{$xhtml}\n---------------------------------\n";
 
+        php_logger::set_log_level('resource_resolver', 'trace');
+
         $this->assertTrue(strpos($xhtml, '/content/css/global.css') !== false);
         $this->assertTrue(strpos($xhtml, '/content/templates/main/style.css') !== false);
         $this->assertTrue(strpos($xhtml, '/content/templates/main/color.css') !== false);
