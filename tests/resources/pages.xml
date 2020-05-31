@@ -43,6 +43,7 @@
     </pageset>
 
     <pageset id='subset1' template='template1'>
+        <pagedef loc='blog' extension='simple-blog' linklists='blogs'/>
         <pagedef loc='sub1home' default='1'>
             <content id='content' src='main-content.html' />
         </pagedef>

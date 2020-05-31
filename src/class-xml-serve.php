@@ -16,15 +16,15 @@ class xml_serve extends page_handlers
     public static $additional_scripts = [];
 
     public static $page_source;
-    public static $extension_source;
 
     public static $method = null;    
     public static $url_path = null;    
+    public static $url_reference = null;    
     
     public static $doc_type;
     public static $page_result;
 
-    public static function init($resource_folder = '', $http_root = '', $pagesrc = null, $sitesettings = null, $extension_source = null)
+    public static function init($resource_folder = '', $http_root = '', $pagesrc = null, $sitesettings = null)
     {
         $resource_folder = realpath($resource_folder);
         $http_root = realpath($http_root);
@@ -52,13 +52,6 @@ class xml_serve extends page_handlers
             else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) self::$settings = new xml_file($l);
         }
         if (self::$settings == null) throw new Exception("Missing argument 4: site settings (filename, xml_file)");
-
-        if ($extension_source != null) {
-            if (is_object($extension_source)) self::$extension_source = $extension_source;
-            else if (file_exists($l = realpath($extension_source))) self::$extension_source = new site_settings($l);
-            else if (file_exists($l = realpath(self::$resource_folder . $extension_source))) self::$extension_source = new site_settings($l);
-            else if (file_exists($l = realpath(__DIR__ . "/site.xml"))) self::$extension_source = new site_settings($l);
-        }
     }
 
     public static function resource_resolver($rr = null)
@@ -120,20 +113,28 @@ class xml_serve extends page_handlers
     protected static function page_part_element($index, &$pageset = "", &$http_result = 200)
     {
         php_logger::call();
-        $extension_handler = null;
 
         $pageset_check = $pageset == '' ? "not(@id)" : "@id='$pageset'";
         if (substr($index, 0, 1) == '/') $index = substr($index, 1);
         if (substr($index, -1) == '/') $index = substr($index, 0, strlen($index) - 1);
         php_logger::log("CALL ($index, $pageset)");
         if ((self::$page_source->nde("/pages/pageset[$pageset_check]/pagedef[@loc='$index']"))  != null) {
+            php_logger::log("Exact match $index (pageset=$pageset)");
             $subpageset = self::$page_source->get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@pageset");
-            php_logger::log("exact match $index (pageset=$pageset)");
-
             if ($subpageset != null) {
-                php_logger::log("matched subset default");
+                php_logger::log("Matched Subset Default");
                 $pageset = $subpageset;
                 return self::page_part_element("", $subpageset);
+            }
+            $extension = self::$page_source->get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@pageset");
+            if (!!$extension) {
+                php_logger::log("Exact matched extension: $extension");
+                die();
+                $pageset = $subpageset;
+                $handler = xml_serve_extensions::get_extension_handler($extension, 'page');
+                if (!$handler) throw new Exception("Specified extension does not exist: $extension");
+                if (!is_callable($handler)) throw new Exception("Extension handler is not callable: extension=$extension, handler=$handler");
+                return call_user_func($handler, '');
             }
 
             $match = "/pages/pageset[$pageset_check]/pagedef[@loc='$index']";
@@ -154,24 +155,29 @@ class xml_serve extends page_handlers
                 $rest = substr($path, $x + 1) . ($rest == "" ? "" : "/") . $rest;
                 $path = substr($path, 0, $x);
             }
-            php_logger::log("Searching path tree: path=$path, rest=$rest");
-            php_logger::debug("Searching: /pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
+            php_logger::log("Searching path tree: path=$path, rest=$rest, pageset=$pageset");
+            php_logger::debug(" In Path: /pages/pageset[$pageset_check]/pagedef[@loc='$path']/...");
 
             $subpageset = self::$page_source->get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@pageset");
             if ($subpageset != null) {
                 php_logger::trace("subpath pageset $pageset");
                 $pageset = $subpageset;
+                self::$url_reference .= "/$path";
                 $subset_result = self::page_part_element($rest, $pageset);
                 if ($subset_result != null) return $subset_result;
                 php_logger::trace("subpath didn't find.  No 404 handler provided.");
                 break;
             }
-        }
-
-        $extension_check = self::$page_source->get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@extension");
-        if ($extension_check) {
-            php_logger::trace("extension handler on path [$path]: $extension_check");
-            return self::$page_source->nde("/pages/pageset[$pageset_check]/pagedef[@loc='$path']");
+            $extension = self::$page_source->get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@extension");
+            if ($extension != '') {
+                php_logger::log("Matched extension: $extension");
+                $handler = xml_serve_extensions::get_extension_handler($extension, 'page');
+                if (!$handler) throw new Exception("Specified extension does not exist: $extension");
+                if (!is_callable($handler)) throw new Exception("Extension handler is not callable: extension=$extension, handler=$handler");
+                self::$url_reference .= "/$path";
+                php_logger::log("Calling extension handler:  $extension, $handler, ref=".self::$url_reference);
+                return call_user_func($handler, self::$url_reference, $rest);
+            }
         }
 
         if ($index == "") {
@@ -217,7 +223,7 @@ class xml_serve extends page_handlers
     {
         php_logger::call();
         self::$pagedef = $pagedef;
-        php_logger::dump("PAGEDEF: ",self::$pagedef->saveXML());
+        // php_logger::dump("PAGEDEF: ",self::$pagedef->saveXML());
         $template_name = self::$pagedef->get("/pagedef/@template");
         php_logger::log("template_name=$template_name");
         $template_file = self::resource_resolver()->resolve_file("template.xml", "template", $template_name);
@@ -260,13 +266,6 @@ class xml_serve extends page_handlers
             if ($type == '') $type = 301;
             self::redirect($url, $type);
         }
-        if (($ext = $pagedef->get("/@extension"))) {
-            $result = xml_serve_extensions::call_extension_handler($ext, "page");
-            if ($result != null) {
-                self::$pagedef = xml_file::toXmlFile($result);
-                return;
-            }
-        }
     }
 
     public static function get_page($index = null, $method = null)
@@ -277,10 +276,11 @@ class xml_serve extends page_handlers
 
         self::$method = $method;
         self::$url_path = $index;
+        self::$url_reference = '';
 
         $http_result = 200;
         $pagedef = self::page_part($index, $http_result);
-        php_logger::debug("HTTP RESULT: $http_result", "pagedef=".$pagedef->saveXML());
+        php_logger::debug("HTTP RESULT: $http_result"); //, "pagedef=".$pagedef->saveXML());
       
         if ($http_result == 404) {
             $args = [];

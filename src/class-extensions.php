@@ -4,13 +4,16 @@ class xml_serve_extensions
 {
     private static $extensions;
 
-    public static function init_extensions()
+    private static function init_extensions()
     {
         if (!is_array(self::$extensions)) self::$extensions = [];
     }
 
-    public static function extenion_list()
-    { return array_keys(self::$extensions); }
+    public static function extension_list()
+    { 
+        self::init_extensions();
+        return array_keys(self::$extensions); 
+    }
 
     public static function add_extension($name, $handlers)
     {
@@ -24,10 +27,24 @@ class xml_serve_extensions
         unset(self::$extensions[$name]);
     }
 
+    public static function add_extension_handler($name, $type, $handler)
+    {
+        self::init_extensions();
+        if (!array_key_exists($name, self::$extensions)) self::$extensions[$name] = [];
+        self::$extensions[$name][$type] = $handler;
+    }
+
+    public static function remove_extension_handler($name, $type)
+    {
+        self::init_extensions();
+        if (!array_key_exists($name, self::$extensions)) self::$extensions[$name] = [];
+        unset(self::$extensions[$type]);
+    }
+
     public static function get_extension_handler($name, $type)
     {
         self::init_extensions();
-        if (!isset(self::$extensions[$name])) return null;
+        if (!array_key_exists($name, self::$extensions)) return null;
         $handlers = self::$extensions[$name];
         return @$handlers[$type];
     }
