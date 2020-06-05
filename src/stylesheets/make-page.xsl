@@ -39,7 +39,7 @@
             <xsl:choose>
                 <xsl:when test='string-length($SRC/pagedef/@text)!=0'><xsl:value-of select='$SRC/pagedef/@text' /></xsl:when>
                 <xsl:when test='string-length($SRC/pagedef/@title)!=0'><xsl:value-of select='$SRC/pagedef/@title' /></xsl:when>
-                <xsl:when test='string-length($SRC/pagedef/@loc)=0'><xsl:value-of select='$SRC/pagedef/@loc' /></xsl:when>
+                <xsl:when test='string-length($SRC/pagedef/@loc)!=0'><xsl:value-of select='$SRC/pagedef/@loc' /></xsl:when>
                 <xsl:otherwise>Default</xsl:otherwise>
             </xsl:choose>
             <xsl:if test='string-length($pTemplate/*/title)!=0'> - <xsl:value-of select='$pTemplate/*/title' /></xsl:if>
