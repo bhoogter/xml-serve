@@ -127,9 +127,9 @@ class xml_serve extends page_handlers
                 return self::page_part_element("", $subpageset);
             }
             $extension = self::$page_source->get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@pageset");
+            php_logger::log("Exact Checking extension: $extension");
             if (!!$extension) {
-                php_logger::log("Exact matched extension: $extension");
-                die();
+                php_logger::log("Exact Matched extension: $extension");
                 $pageset = $subpageset;
                 $handler = xml_serve_extensions::get_extension_handler($extension, 'page');
                 if (!$handler) throw new Exception("Specified extension does not exist: $extension");
@@ -169,6 +169,7 @@ class xml_serve extends page_handlers
                 break;
             }
             $extension = self::$page_source->get("/pages/pageset[$pageset_check]/pagedef[@loc='$path']/@extension");
+            php_logger::log("Checking extension: $extension");
             if ($extension != '') {
                 php_logger::log("Matched extension: $extension");
                 $handler = xml_serve_extensions::get_extension_handler($extension, 'page');
