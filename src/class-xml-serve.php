@@ -126,7 +126,7 @@ class xml_serve extends page_handlers
                 $pageset = $subpageset;
                 return self::page_part_element("", $subpageset);
             }
-            $extension = self::$page_source->get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@pageset");
+            $extension = self::$page_source->get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@extension");
             php_logger::log("Exact Checking extension: $extension");
             if (!!$extension) {
                 php_logger::log("Exact Matched extension: $extension");
