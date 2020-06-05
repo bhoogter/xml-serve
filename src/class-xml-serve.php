@@ -124,6 +124,7 @@ class xml_serve extends page_handlers
             if ($subpageset != null) {
                 php_logger::log("Matched Subset Default");
                 $pageset = $subpageset;
+                self::$url_reference .= "/$index";
                 return self::page_part_element("", $subpageset);
             }
             $extension = self::$page_source->get("/pages/pageset[$pageset_check]/pagedef[@loc='$index']/@extension");
@@ -132,6 +133,7 @@ class xml_serve extends page_handlers
                 php_logger::log("Exact Matched extension: $extension");
                 $pageset = $subpageset;
                 $handler = xml_serve_extensions::get_extension_handler($extension, 'page');
+                self::$url_reference .= "/$index";
                 if (!$handler) throw new Exception("Specified extension does not exist: $extension");
                 if (!is_callable($handler)) throw new Exception("Extension handler is not callable: extension=$extension, handler=$handler");
                 return call_user_func($handler, '');
