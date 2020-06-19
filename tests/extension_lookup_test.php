@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class extension_lookup_test extends TestCase
 {
-
     private const SITE_XML = __DIR__ . "/resources/site.xml";
 	private const PAGES_XML = __DIR__ . "/resources/pages.xml";
 
@@ -28,8 +27,8 @@ class extension_lookup_test extends TestCase
         $result = xml_serve::get_page('/sub/blog/posts/1-3-4-5', "GET");
         // print_r($result);
         $this->assertEquals(1, blog_page::$x);
+        $this->assertEquals("posts/1-3-4-5", blog_page::$path);
         $this->assertEquals("/sub/blog", blog_page::$loc);
-        $this->assertEquals("posts/1-3-4-5", blog_page::$ref);
     }
 
     public function testExtensionLookup2(): void 
@@ -38,8 +37,8 @@ class extension_lookup_test extends TestCase
         $result = xml_serve::get_page('/blog/posts/xyz', "GET");
         // print_r($result);
         $this->assertEquals(1, blog_page::$x);
+        $this->assertEquals("posts/xyz", blog_page::$path);
         $this->assertEquals("/blog", blog_page::$loc);
-        $this->assertEquals("posts/xyz", blog_page::$ref);
     }
 
     public function testExtensionLookup3(): void 
@@ -48,7 +47,17 @@ class extension_lookup_test extends TestCase
         $result = xml_serve::get_page('/blog2/posts/xyz123', "GET");
         // print_r($result);
         $this->assertEquals(1, blog_page::$x);
+        $this->assertEquals("posts/xyz123", blog_page::$path);
         $this->assertEquals("/blog2", blog_page::$loc);
-        $this->assertEquals("posts/xyz123", blog_page::$ref);
+    }
+
+    public function testExtensionLookup4(): void 
+    {
+        // $this->expectException(Exception::class);
+        $result = xml_serve::get_page('/sub/blog/posts/xyz123', "GET");
+        // print_r($result);
+        $this->assertEquals(1, blog_page::$x);
+        $this->assertEquals("posts/xyz123", blog_page::$path);
+        $this->assertEquals("/sub/blog", blog_page::$loc);
     }
 }

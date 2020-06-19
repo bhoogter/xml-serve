@@ -1,11 +1,9 @@
 <?php
 
-function blog_page($location, $path)
+function blog_page($path, $location, $method, $url)
     {
         php_logger::warning("BLOG PAGE: location=$location, path=$path");
-        blog_page::$x = 1;
-        blog_page::$loc = $location;
-        blog_page::$ref = $path;
+        blog_page::set($path, $location, $method, $url);
         $r = xml_serve::xml_content("<pagedef/>")->documentElement;
         php_logger::warning($r);
         return $r;
@@ -13,7 +11,20 @@ function blog_page($location, $path)
 
 class blog_page {
     static $x = 0;
+    static $path = "";
     static $loc = "";
-    static $ref = "";
+    static $method = "";
+    static $url = "";
 
+    public static function set($path, $location, $method, $url, $x = 1) {
+        self::$x = $x;
+        self::$path = $path;
+        self::$loc = $location;
+        self::$method = $method;
+        self::$url = $url;
+    }
+
+    public static function reset() {
+        self::set("", "", "", "", 0);
+    }
 }

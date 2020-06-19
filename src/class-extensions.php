@@ -49,13 +49,13 @@ class xml_serve_extensions
         return @$handlers[$type];
     }
 
-    public static function call_extension_handler($loc, $path, $name, $type)
+    public static function call_extension_handler($name, $type, $loc)
     {
+        php_logger::call();
         $handler = self::get_extension_handler($name, $type);
         if (!$handler) return null;
-        if (!is_callable($handler))
-            throw new Exception("Handler [$handler] is not callable.");
-        $result = call_user_func($handler, $loc, $path);
+        if (!is_callable($handler)) throw new Exception("Handler [$handler] is not callable.");
+        $result = call_user_func($handler, $loc, xml_serve::$url_reference, xml_serve::$method, xml_serve::$url_path);
 
         return $result;
     }

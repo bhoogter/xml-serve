@@ -105,7 +105,7 @@
                         <script>
                             <xsl:attribute name='type'><xsl:value-of select='php:functionString("xml_serve::file_content_type", string($src))'/></xsl:attribute>
                             <xsl:attribute name='src' ><xsl:value-of select='$src' /></xsl:attribute>
-                            &nbsp;
+                            &#160;
                         </script>
                     </xsl:if>
                 </xsl:for-each>
