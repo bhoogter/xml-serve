@@ -136,7 +136,9 @@ class xml_serve extends page_handlers
                 self::$url_reference .= "/$index";
                 if (!$handler) throw new Exception("Specified extension does not exist: $extension");
                 if (!is_callable($handler)) throw new Exception("Extension handler is not callable: extension=$extension, handler=$handler");
-                return xml_serve_extensions::call_extension_handler($extension, 'page', '');
+                $result = xml_serve_extensions::call_extension_handler($extension, 'page', '');
+                $result->setAttribute("extension", $extension);
+                return $result;
             }
 
             $match = "/pages/pageset[$pageset_check]/pagedef[@loc='$index']";
@@ -179,7 +181,9 @@ class xml_serve extends page_handlers
                 if (!is_callable($handler)) throw new Exception("Extension handler is not callable: extension=$extension, handler=$handler");
                 self::$url_reference .= "/$path";
                 php_logger::log("Calling extension handler:  $extension, $handler, ref=".self::$url_reference);
-                return xml_serve_extensions::call_extension_handler($extension, 'page', $rest);
+                $result = xml_serve_extensions::call_extension_handler($extension, 'page', $rest);
+                $result->setAttribute("extension", $extension);
+                return $result;
             }
         }
 
