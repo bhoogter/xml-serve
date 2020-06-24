@@ -9,6 +9,7 @@ class xml_serve extends page_handlers
 
     public static $pagedef;
     public static $template;
+    public static $extension;
     public static $settings;
 
     public static $additional_css = [];
@@ -136,6 +137,7 @@ class xml_serve extends page_handlers
                 self::$url_reference .= "/$index";
                 if (!$handler) throw new Exception("Specified extension does not exist: $extension");
                 if (!is_callable($handler)) throw new Exception("Extension handler is not callable: extension=$extension, handler=$handler");
+                self::$extension = $extension;
                 $result = xml_serve_extensions::call_extension_handler($extension, 'page', '');
                 $result->setAttribute("extension", $extension);
                 return $result;
@@ -181,6 +183,7 @@ class xml_serve extends page_handlers
                 if (!is_callable($handler)) throw new Exception("Extension handler is not callable: extension=$extension, handler=$handler");
                 self::$url_reference .= "/$path";
                 php_logger::log("Calling extension handler:  $extension, $handler, ref=".self::$url_reference);
+                self::$extension = $extension;
                 $result = xml_serve_extensions::call_extension_handler($extension, 'page', $rest);
                 $result->setAttribute("extension", $extension);
                 return $result;
@@ -232,6 +235,7 @@ class xml_serve extends page_handlers
         self::$pagedef = $pagedef;
         // php_logger::dump("PAGEDEF: ",self::$pagedef->saveXML());
         $template_name = self::$pagedef->get("/pagedef/@template");
+        self::$template = $template_name;
         php_logger::log("template_name=$template_name");
         $template_file = self::resource_resolver()->resolve_file("template.xml", "template", $template_name);
         if ($template_file == null) {

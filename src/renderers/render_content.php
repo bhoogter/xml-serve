@@ -37,7 +37,13 @@ class render_content extends render_base
         if ($type == "") $type = strrpos($src, '.') === false ? '' : substr($src, strrpos($src, '.') + 1);
         php_logger::debug("id=$id", "src=$src", "type=$type");
 
-        $res = xml_serve::resource_resolver()->resolve_file($src, "template", xml_serve::template_name());
+        $rTypes = ["template"];
+        $rMapps = ["template"=>xml_serve::template_name()];
+        if (xml_serve::$extension) {
+            $rTypes += ["module"];
+            $rMapps += ["module"=>xml_serve::$extension];
+        }
+        $res = xml_serve::resource_resolver()->resolve_file($src, $rTypes, $rMapps);
         php_logger::log("template_name", xml_serve::template_name(), "res=$res");
 
         if ($res == "") return xml_serve::empty_content();
