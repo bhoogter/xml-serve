@@ -4,6 +4,10 @@ function blog_page($path, $location, $method, $url)
     {
         php_logger::warning("BLOG PAGE: location=$location, path=$path");
         blog_page::set($path, $location, $method, $url);
+        $s = "<pagedef>";
+        $s .= " <content id='content' type='xhtml' src='simple-blog-content.xml' />";
+        $s .= "</pagedef>";
+
         $r = xml_serve::xml_content("<pagedef/>")->documentElement;
         php_logger::warning($r);
         return $r;

@@ -40,8 +40,8 @@ class render_content extends render_base
         $rTypes = ["template"];
         $rMapps = ["template"=>xml_serve::template_name()];
         if (xml_serve::$extension) {
-            $rTypes += ["module"];
-            $rMapps += ["module"=>xml_serve::$extension];
+            $rTypes[] = "module";
+            $rMapps += ["module" => xml_serve::$extension];
         }
         $res = xml_serve::resource_resolver()->resolve_file($src, $rTypes, $rMapps);
         php_logger::log("template_name", xml_serve::template_name(), "res=$res");
