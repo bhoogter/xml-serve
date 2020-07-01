@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-class page_lookup extends TestCase
+class page_lookup_test extends TestCase
 {
 	private const SITE_XML = __DIR__ . "/resources/site.xml";
 	private const PAGES_XML = __DIR__ . "/resources/pages.xml";

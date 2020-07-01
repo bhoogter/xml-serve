@@ -11,7 +11,7 @@ class extension_lookup_test extends TestCase
 
 	public static function setUpBeforeClass(): void
 	{
-        require_once(__DIR__ . "/resources/content/extensions/simple-blog/functions.php");
+        require_once(__DIR__ . "/resources/content/modules/simple-blog/functions.php");
         xml_serve::init(
             __DIR__ . '/resources/content', 
             __DIR__, 

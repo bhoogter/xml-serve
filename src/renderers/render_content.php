@@ -55,7 +55,8 @@ class render_content extends render_base
                 return xml_serve::xml_content($cont);
             case 'xml':
             case 'xhtml':
-                return xml_serve::xml_content($res);
+                php_logger::debug("parsing xhtml [len=" . strlen($cont) . "]: " . substr($cont, 10));
+                return xml_serve::xml_content($cont);
             case 'html':
                 $config = array(
                     'indent'         => true,
