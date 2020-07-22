@@ -106,6 +106,7 @@ class page_handlers
                 php_logger::trace("Got null in handler.  Returning empty content.");
                 break;
             }
+            if (is_string($result)) $result = xml_file::toDocEl($result);
             if (get_class($result) == "DOMDocument") $result = $result->documentElement;
         }
         if ($result == null) $result = self::empty_content();
