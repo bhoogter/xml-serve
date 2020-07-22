@@ -307,7 +307,9 @@ class xml_serve extends page_handlers
 
         self::parse_special($index, $pagedef, $http_result);
         $page = self::make_page($pagedef);
-        self::$page_result = xml_file::make_tidy_string($page->saveXML());
+        self::$page_result = $page->saveXML();
+        self::$page_result = xml_file::make_tidy_string(self::$page_result);
+        self::$page_result = preg_replace("/\/\/SCRIPT:([\\w\n\r])*/", "//", self::$page_result);
         php_logger::debug("Page Result len=".strlen(self::$page_result));
         if (self::$doc_type != '') self::$page_result = self::$doc_type . "\n" . self::$page_result;
         return self::$page_result;

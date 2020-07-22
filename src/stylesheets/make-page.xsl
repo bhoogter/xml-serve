@@ -198,7 +198,7 @@
                 <script>
                     <xsl:for-each select='@*'><xsl:copy-of select='.' /></xsl:for-each>
                     <xsl:text disable-output-escaping='yes'>
-// &lt;![CDATA[</xsl:text>
+//SCRIPT:&lt;![CDATA[</xsl:text>
                     <xsl:copy-of select='./text()' />
                     <xsl:text disable-output-escaping='yes'>//]]&gt;
                     </xsl:text>

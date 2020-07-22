@@ -1,0 +1,11 @@
+<span>
+    <hr/>
+    rrrrrrrrrrrrrrrrrrr
+    <script type='text/javascript'>
+        a = 1;
+        b = 2;
+        c = a + 2;
+        s = "a  b   c        d";
+        alert(c);
+    </script>
+</span>
