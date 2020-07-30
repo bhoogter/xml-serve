@@ -210,6 +210,22 @@ class xml_serve extends page_handlers
         return null;
     }
 
+    public static function markdownToHtml($s, $tidy = false) {
+        require_once(__DIR__ . "renderers/support/slimdown.php");
+        $html = Slimdown::render($cont);
+        if (!!$tidy) {
+            if ($tidy === true) $tidy = "xhtml";
+            $html = xml_file::make_tidy_string($html, $tidy);
+        }
+        return $html;
+    }
+
+    public static function htmlToMarkdown($s) {
+        require_once(__DIR__ . "renderers/support/slimup.php");
+        $html = Slimup::render($cont);
+        return $html;
+    }
+
     public static function page_part($index, &$http_result = 200)
     {
         php_logger::call();

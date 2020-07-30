@@ -70,10 +70,8 @@ class render_content extends render_base
                 $result = xml_serve::xml_content($cont);
                 return $result;
             case 'md':
-                require_once(__DIR__ . "support/slimdown.php");
-                $html = Slimdown::render($cont);
-                $xml = xml_file::make_tidy_string($html, "xhtml");
-                return xml_serve::xml_content(Slimdown::render($xml));
+                $html = xml_serve::markdownToHtml($cont, true);
+                return xml_serve::xml_content(Slimdown::render($html));
             default:
                 return xml_serve::xml_content("<span>!<[CDATA[".str_replace(">", "&gt;", $cont)."]]></span>");
         }
