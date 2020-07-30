@@ -211,7 +211,7 @@ class xml_serve extends page_handlers
     }
 
     public static function markdownToHtml($s, $tidy = false) {
-        require_once(__DIR__ . "renderers/support/slimdown.php");
+        require_once(__DIR__ . "/renderers/support/slimdown.php");
         $html = Slimdown::render($cont);
         if (!!$tidy) {
             if ($tidy === true) $tidy = "xhtml";
@@ -221,7 +221,7 @@ class xml_serve extends page_handlers
     }
 
     public static function htmlToMarkdown($s) {
-        require_once(__DIR__ . "renderers/support/slimup.php");
+        require_once(__DIR__ . "/renderers/support/slimup.php");
         $html = Slimup::render($cont);
         return $html;
     }
