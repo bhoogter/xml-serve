@@ -210,7 +210,7 @@ class xml_serve extends page_handlers
         return null;
     }
 
-    public static function markdownToHtml($s, $tidy = false) {
+    public static function markdownToHtml($cont, $tidy = false) {
         require_once(__DIR__ . "/renderers/support/slimdown.php");
         $html = Slimdown::render($cont);
         if (!!$tidy) {
@@ -220,7 +220,7 @@ class xml_serve extends page_handlers
         return $html;
     }
 
-    public static function htmlToMarkdown($s) {
+    public static function htmlToMarkdown($cont) {
         require_once(__DIR__ . "/renderers/support/slimup.php");
         $html = Slimup::render($cont);
         return $html;
