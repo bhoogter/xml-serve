@@ -8,5 +8,9 @@
         <shortcuticon img='favicon.png' />
         <css src='global.css' />
         <url src='http://localhost' />
+		<header>
+			<global-junk />
+		</header>
 	</global>
+
 </site>

@@ -15,6 +15,7 @@ class xml_serve extends page_handlers
     public static $additional_css = [];
     public static $additional_rss = [];
     public static $additional_scripts = [];
+    public static $additional_headers = [];
 
     public static $page_source;
 
@@ -79,17 +80,27 @@ class xml_serve extends page_handlers
         return self::$settings->Doc; 
     }
 
-    private static function additional_item_list($list, $itemtype) {
+    private static function additional_item_list($list, $itemtype = 'src') {
         if (!is_array($list)) $list = [];
+        $list = array_unique($list);
         $s  = "<list>";
-        foreach($list as $l) $s .= "<item $itemtype='$l' />";
+        foreach($list as $l) 
+            $s .= !!$itemtype ? "<item $itemtype='$l' />" : "$l";
         $s .= "</list>";
+        // if (false !== strpos($s, "junk")) die($s);
         return self::xml_content($s);
     }
 
-    public static function get_additional_css() { return self::additional_item_list(self::$additional_css, 'src'); }
-    public static function get_additional_rss() { return self::additional_item_list(self::$additional_rss, 'src'); }
-    public static function get_additional_script() { return self::additional_item_list(self::$additional_scripts, 'src'); }
+    public static function add_additional_css($res) { self::$additional_css[] = $res; }
+    public static function add_additional_rss($res) { self::$additional_rss[] = $res; }
+    public static function add_additional_script($res) { self::$additional_scripts[] = $res; }
+    public static function add_additional_header($html) { self::$additional_headers[] = $html; }
+    public static function add_additional_meta($name, $content) { self::add_additional_header("<meta name='$name' content='$content' />"); }
+
+    public static function get_additional_css() { return self::additional_item_list(self::$additional_css); }
+    public static function get_additional_rss() { return self::additional_item_list(self::$additional_rss); }
+    public static function get_additional_script() { return self::additional_item_list(self::$additional_scripts); }
+    public static function get_additional_header() { return self::additional_item_list(self::$additional_headers, null); }
 
     public static function template_name() { return self::$pagedef->get("/pagedef/@template"); }
     public static function generator_name() { return self::$generator; }

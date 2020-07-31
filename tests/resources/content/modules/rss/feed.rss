@@ -1,0 +1,31 @@
+<rss version="2.0">
+    <channel>
+        <title>An RSS Daily News Feed from FeedForAll - RSS Feed Creation.</title>
+        <description>RSS is a fascinating technology. The uses for RSS are expanding daily. Take a closer look at how various industries are using the benefits of RSS in their businesses. New information related to RSS feeds and using RSS for marketing is posted on a regular basis.</description>
+        <link>http://www.feedforall.com/blog.htm</link>
+        <category domain="www.dmoz.com">Computers/Software/Internet/Site Management/Content Management</category>
+        <copyright>Copyright 2004 NotePage, Inc.</copyright>
+        <docs>http://blogs.law.harvard.edu/tech/rss</docs>
+        <language>en-us</language>
+        <lastBuildDate>Thu, 30 Jul 2020 15:07:25 -0400</lastBuildDate>
+        <managingEditor>marketing@feedforall.com</managingEditor>
+        <pubDate>Tue, 6 Nov 2012 10:00:00 -0500</pubDate>
+        <webMaster>webmaster@feedforall.com</webMaster>
+        <generator>FeedForAll v2.0 (2.0.1.0) http://www.feedforall.com</generator>
+        <image>
+            <url>http://www.feedforall.com/feedforall-icon.gif</url>
+            <title>FeedForAll</title>
+            <link>http://www.feedforall.com/blog.htm</link>
+            <description>FeedForAll - RSS Software</description>
+            <width>42</width>
+            <height>39</height>
+        </image>
+        <item>
+            <title>Podcasting Content</title>
+            <description>Podcasting content comes in a wide variety of shapes and sizes. Businesses are finding many different and creative ways of incorporating podcasts into their business strategies and marketing plans.<br /> <br /> Here are just some of the various types of content that businesses are turning into podcasts...<br /> <br /> <a href="https://www.feedforall.com/podcasting-content.htm" target="_blank" >Podcasting Content</a></description>
+            <link>http://www.feedforall.com/blog.htm#768</link>
+            <guid isPermaLink="false">768</guid>
+            <pubDate>Thu, 10 Sep 2020 15:03:29 -0400</pubDate>
+        </item>
+    </channel>
+</rss>

@@ -17,6 +17,7 @@
     <xsl:variable name='addCss' select='php:function("xml_serve::get_additional_css")' />
     <xsl:variable name='addRss' select='php:function("xml_serve::get_additional_rss")' />
     <xsl:variable name='addScript' select='php:function("xml_serve::get_additional_script")' />
+    <xsl:variable name='addHeader' select='php:function("xml_serve::get_additional_header")' />
 
     <xsl:template match='/'>
         <xsl:variable name='debug_make_page' select='php:functionString("constant", "xml_serve::DEBUG_MAKE_PAGE")' />
@@ -121,7 +122,7 @@
                     </meta>
                 </xsl:for-each>
 
-                <xsl:for-each select='$siteSettings/*/global/header | $pTemplate/*/header | //*/header'>
+                <xsl:for-each select='$siteSettings/*/global/header | $pTemplate/*/header | //*/header | $addHeader/list'>
                     <xsl:copy-of select='node()'/>
                 </xsl:for-each>
 
