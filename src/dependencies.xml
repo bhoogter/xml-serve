@@ -4,7 +4,7 @@
     <module>
         <dependencies>
             <dependency group="bhoogter" name="php-logger" version="1.0.0" />
-            <dependency group="bhoogter" name="resource-resolver" version="0.1.19" />
+            <dependency group="bhoogter" name="resource-resolver" version="0.1.20" />
         </dependencies>
     </module>
 </modules>
