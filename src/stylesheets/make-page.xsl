@@ -20,7 +20,7 @@
     <xsl:variable name='addHeader' select='php:function("xml_serve::get_additional_header")' />
 
     <xsl:template match='/'>
-        <xsl:variable name='debug_make_page' select='php:functionString("constant", "xml_serve::DEBUG_MAKE_PAGE")' />
+        <xsl:variable name='debug_make_page' select='php:functionString("xml_serve::DEBUG_MAKE_PAGE")' />
         <xsl:if test="$debug_make_page != ''">
             <table class='DEBUG' style='border:solid 1px black;'>
                 <tr><td colspan='2' class='title'>make-page.xsl</td></tr>
@@ -31,6 +31,10 @@
                 <tr><td>tTitle</td><td><xsl:value-of select='$pTemplate/*/title'/></td></tr>
                 <tr><td>lTitle</td><td><xsl:value-of select='$SRC/*/@title'/></td></tr>
                 <tr><td>Handled</td><td><xsl:value-of select='$HandledElements'/></td></tr>
+                <tr><td>addCss</td><td><xsl:value-of select='$addCss'/></td></tr>
+                <tr><td>addRss</td><td><xsl:value-of select='$addRss'/></td></tr>
+                <tr><td>addScript</td><td><xsl:value-of select='$addScript'/></td></tr>
+                <tr><td>addHeader</td><td><xsl:value-of select='$addHeader'/></td></tr>
             </table>
         </xsl:if>
 

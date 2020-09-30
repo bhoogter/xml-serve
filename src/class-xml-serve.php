@@ -2,7 +2,7 @@
 
 class xml_serve extends page_handlers
 {
-    public const DEBUG_MAKE_PAGE = "";
+    public static $_DEBUG_MAKE_PAGE = "";
     public static $generator = "XML_SERVE";
 
     public static $resource_folder;
@@ -26,6 +26,7 @@ class xml_serve extends page_handlers
     public static $doc_type;
     public static $page_result;
 
+    public static function DEBUG_MAKE_PAGE() { return self::$_DEBUG_MAKE_PAGE; }
     public static function init($resource_folder = '', $http_root = '', $pagesrc = null, $sitesettings = null)
     {
         $resource_folder = realpath($resource_folder);
