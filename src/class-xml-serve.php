@@ -307,6 +307,14 @@ class xml_serve extends page_handlers
         }
     }
 
+    public static function finalize_page($xml) {
+        $xml = xml_file::make_tidy_string($xml);
+        // This fixes the MS XML issues with newlines in scripts
+        $xml = preg_replace("/\/\/SCRIPT:([\\w\n\r])*/", "//", $xml);
+        if (self::$doc_type != '') $xml = self::$doc_type . "\n" . $xml;
+        return $xml;
+    }
+
     public static function get_page($index = null, $method = null)
     {
         if ($index == null) $index = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -335,11 +343,10 @@ class xml_serve extends page_handlers
 
         self::parse_special($index, $pagedef, $http_result);
         $page = self::make_page($pagedef);
-        self::$page_result = $page->saveXML();
-        self::$page_result = xml_file::make_tidy_string(self::$page_result);
-        self::$page_result = preg_replace("/\/\/SCRIPT:([\\w\n\r])*/", "//", self::$page_result);
+
+        self::$page_result = self::finalize_page($page->saveXML());
+
         php_logger::debug("Page Result len=".strlen(self::$page_result));
-        if (self::$doc_type != '') self::$page_result = self::$doc_type . "\n" . self::$page_result;
         return self::$page_result;
     }
 }
