@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+
+<pagetemplate name='Forest'>
+    <uri>http://www.google.com/</uri>
+    <version>1.1</version>
+    <description>A new forest-green template</description>
+    <author>Verde</author>
+    <author-uri>http://www.blazingglory.org</author-uri>
+    <tags>green, three-column</tags>
+    <preview>green-screen.jpg</preview>
+
+    <pagebody>
+        <content id='content' />
+    </pagebody>
+</pagetemplate>

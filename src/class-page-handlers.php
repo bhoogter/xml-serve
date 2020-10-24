@@ -111,6 +111,7 @@ class page_handlers
         }
         if ($result == null) $result = self::empty_content();
         php_logger::trace("Returning NON EMPTY for $type");
+        php_logger::dump(xml_file::toXml($result));
         return $result;
     }
 }

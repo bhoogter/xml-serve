@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
+class extras {
+    public function render() {
+        return page_handlers::xml_content("<span>extras</span>");
+    }
+}
+
+
+
 class handlers_test extends TestCase
 {
 	private const PAGES_XML = __DIR__ . "/resources/pages.xml";
@@ -61,5 +69,16 @@ class handlers_test extends TestCase
     public function testXmlContent() {
         $this->assertNotNull(page_handlers::xml_content("<sometag><other></sometag>"));
         $this->assertNotNull(page_handlers::empty_content());
+    }
+
+    public function testRenderContentDirect() {
+        php_logger::clear_log_levels("all");
+        xml_serve::add_handler("extra", "extras::render");
+        $def = "<pagedef template='blank'><content id='content' type='element' name='extra' src='mode=display' /></pagedef>";
+        $result = xml_serve::make_page(xml_file::toXmlFile($def));
+
+        print "\n[[[" . xml_file::toXml($result) . "]]]";
+
+        $this->assertTrue(!!strpos(xml_file::toXml($result), "extras"));
     }
 }

@@ -18,6 +18,10 @@
             <content id='content' type='xml' src='script-content.xml' />
         </pagedef>
 
+        <pagedef text='Script Render' loc='script'>
+            <content id='content' type='element' name='' src='script-content.xml' />
+        </pagedef>
+
         <pagedef loc='sub' pageset='subset1' linklists='sub' />
         <pagedef loc='sub/sub' pageset='subset1' />
         <pagedef loc='sub/sub/sub' pageset='subset1' />
