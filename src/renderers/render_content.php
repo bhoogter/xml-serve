@@ -13,29 +13,20 @@ class render_content extends render_base
         $id = $el->getAttribute("id");
         if (!$id) $id = 'content';
 
-        if (xml_serve::$pagedef) {
-            $src = xml_serve::$pagedef->get("/pagedef/content[@id='$id']/@src");
-            $type = xml_serve::$pagedef->get("/pagedef/content[@id='$id']/@type");
-            $name = xml_serve::$pagedef->get("/pagedef/content[@id='$id']/@name");
-        }
+        $merged = xml_file::toDocEl(xml_file::toXml($el));
+        if (xml_serve::$settings != null && ($k = xml_serve::$settings->nde("/site/content[@id='$id']")))
+            foreach ($k->attributes as $attr)
+                $merged->setAttribute($attr->localName, $attr->nodeValue);
+        if (xml_serve::$template != null && ($k = xml_serve::$template->nde("/pagetemplate/content[@id='$id']")))
+            foreach ($k->attributes as $attr)
+                $merged->setAttribute($attr->localName, $attr->nodeValue);
+        if (xml_serve::$template != null && ($k = xml_serve::$pagedef->nde("/pagedef/content[@id='$id']")))
+            foreach ($k->attributes as $attr)
+                $merged->setAttribute($attr->localName, $attr->nodeValue);
 
-        if ($src == '' && xml_serve::$template) {
-            $src = xml_serve::$template->get("/pagetemplate/content[@id='$id']/@src");
-            $type = xml_serve::$template->get("/pagetemplate/content[@id='$id']/@type");
-            $name = xml_serve::$template->get("/pagetemplate/content[@id='$id']/@name");
-        }
-
-        if ($src == '') {
-            $src = xml_serve::$settings->get("/site/content[@id='$id']/@src");
-            $type = xml_serve::$settings->get("/site/content[@id='$id']/@type");
-            $name = xml_serve::$settings->get("/site/content[@id='$id']/@name");
-        }
-
-        if ($src == '') {
-            $src = $el->getAttribute("src");
-            $type = $el->getAttribute("type");
-            $name = $el->getAttribute("name");
-        }
+        $src = $merged->getAttribute("src");
+        $type = $merged->getAttribute("type");
+        $name = $merged->getAttribute("name");
 
         if ($src == "") $src = "$id.html";
         if ($type == "") $type = strrpos($src, '.') === false ? '' : substr($src, strrpos($src, '.') + 1);
@@ -43,7 +34,7 @@ class render_content extends render_base
 
         if ($type != 'element') {
             $rTypes = ["template"];
-            $rMapps = ["template"=>xml_serve::template_name()];
+            $rMapps = ["template" => xml_serve::template_name()];
             if (xml_serve::$extension) {
                 $rTypes[] = "module";
                 $rMapps += ["module" => xml_serve::$extension];
@@ -68,7 +59,8 @@ class render_content extends render_base
                     'indent'         => true,
                     'output-xml'     => true,
                     'input-xml'     => true,
-                    'wrap'         => '1000');
+                    'wrap'         => '1000'
+                );
                 $tidy = new tidy();
                 $tidy->parseString($cont, $config, 'utf8');
                 $tidy->cleanRepair();
@@ -79,9 +71,9 @@ class render_content extends render_base
                 $html = xml_serve::markdownToHtml($cont, true);
                 return xml_serve::xml_content(Slimdown::render($html));
             case 'element':
-                return xml_file::toDocEl(xml_serve::handle_element($name, $el));
+                return xml_file::toDocEl(xml_serve::handle_element($name, $merged));
             default:
-                return xml_serve::xml_content("<span>!<[CDATA[".str_replace(">", "&gt;", $cont)."]]></span>");
+                return xml_serve::xml_content("<span>!<[CDATA[" . str_replace(">", "&gt;", $cont) . "]]></span>");
         }
 
         return $el;
