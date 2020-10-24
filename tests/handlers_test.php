@@ -74,7 +74,7 @@ class handlers_test extends TestCase
     public function testRenderContentDirect() {
         php_logger::clear_log_levels("all");
         xml_serve::add_handler("extra", "extras::render");
-        $def = "<pagedef template='blank'><content id='content' type='element' name='extra' src='mode=display' /></pagedef>";
+        $def = "<pagedef template='blank'><content id='content' type='element' element-name='extra' src='mode=display' /></pagedef>";
         $result = xml_serve::make_page(xml_file::toXmlFile($def));
 
         print "\n[[[" . xml_file::toXml($result) . "]]]";

@@ -71,6 +71,7 @@ class render_content extends render_base
                 $html = xml_serve::markdownToHtml($cont, true);
                 return xml_serve::xml_content(Slimdown::render($html));
             case 'element':
+                $name = $merged->getAttribute('element-name');
                 return xml_file::toDocEl(xml_serve::handle_element($name, $merged));
             default:
                 return xml_serve::xml_content("<span>!<[CDATA[" . str_replace(">", "&gt;", $cont) . "]]></span>");
